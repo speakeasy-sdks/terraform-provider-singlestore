@@ -1,6 +1,6 @@
 configVersion: 1.0.0
 management:
-  docChecksum: a41b487c5a25917452218b3c8c0138e7
+  docChecksum: ec34bb698a83319592364cad6f0e9194
   docVersion: 1.1.33
   speakeasyVersion: 1.99.1
   generationVersion: 2.154.1
@@ -21,6 +21,6 @@ features:
     includes: 2.81.1
     nameOverrides: 2.81.1
 terraform:
-  version: 0.1.0
+  version: 0.1.1
   author: Singlestore
   packageName: singlestore

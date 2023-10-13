@@ -6,7 +6,6 @@ internal/sdk/stages.go
 internal/sdk/workspacegroups.go
 internal/sdk/workspaces.go
 internal/sdk/sdk.go
-internal/provider/type_billing_usage_usage.go
 examples/README.md
 go.mod
 go.sum
@@ -128,7 +127,4 @@ internal/sdk/pkg/models/shared/createstagesfilerequest1.go
 USAGE.md
 internal/provider/provider.go
 examples/provider/provider.tf
-internal/provider/billing_resource.go
-internal/provider/billing_resource_sdk.go
-examples/resources/singlestore_billing/resource.tf
 .gitattributes
