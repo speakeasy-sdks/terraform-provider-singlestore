@@ -182,7 +182,7 @@ func (s *stages) DeleteStagesFile(ctx context.Context, request operations.Delete
 	return res, nil
 }
 
-// ReadStagesFile - Gets information about a folder or downloads a file
+// GetStagesFile - Gets information about a folder or downloads a file
 // If the specified path is a folder, the API returns the list of files and folders inside this folder in Stages. If the specified path is a file, the API call is redirected to a download URL.
 //
 // This endpoint supports both URL-encoded and regular URL paths. Here are some examples of valid requests:
@@ -190,7 +190,7 @@ func (s *stages) DeleteStagesFile(ctx context.Context, request operations.Delete
 // - /v1/stages/68af2f46-0000-1000-9000-3f6f5365d878/fs/parent_folder%2Fsample_path
 //
 // You must specify the `workspaceGroupID` and the folder/file path in the API call.
-func (s *stages) ReadStagesFile(ctx context.Context, request operations.ReadStagesFileRequest) (*operations.ReadStagesFileResponse, error) {
+func (s *stages) GetStagesFile(ctx context.Context, request operations.GetStagesFileRequest) (*operations.GetStagesFileResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/v1/stages/{workspaceGroupID}/fs/{path}", request, nil)
 	if err != nil {
@@ -227,7 +227,7 @@ func (s *stages) ReadStagesFile(ctx context.Context, request operations.ReadStag
 
 	contentType := httpRes.Header.Get("Content-Type")
 
-	res := &operations.ReadStagesFileResponse{
+	res := &operations.GetStagesFileResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 		RawResponse: httpRes,

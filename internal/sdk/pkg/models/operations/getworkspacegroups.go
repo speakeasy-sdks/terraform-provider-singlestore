@@ -7,20 +7,20 @@ import (
 	"singlestore/internal/sdk/pkg/models/shared"
 )
 
-type ReadPrivateConnectionWorkspaceGroupsRequest struct {
+type GetWorkspaceGroupsRequest struct {
 	// Comma-separated values list that correspond to the filtered fields for returned entities
 	Fields *string `queryParam:"style=form,explode=true,name=fields"`
 	// ID of the workspace group
 	WorkspaceGroupID string `pathParam:"style=simple,explode=false,name=workspaceGroupID"`
 }
 
-type ReadPrivateConnectionWorkspaceGroupsResponse struct {
+type GetWorkspaceGroupsResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
-	// OK
-	PrivateConnections []shared.PrivateConnection
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
+	// OK
+	WorkspaceGroup *shared.WorkspaceGroup
 }

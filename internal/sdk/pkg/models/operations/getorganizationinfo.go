@@ -7,7 +7,7 @@ import (
 	"singlestore/internal/sdk/pkg/models/shared"
 )
 
-type ReadOrganizationInfoResponse struct {
+type GetOrganizationInfoResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
 	// OK

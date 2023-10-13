@@ -25,9 +25,9 @@ func newOrganizations(sdkConfig sdkConfiguration) *organizations {
 	}
 }
 
-// ReadOrganizationInfo - Gets information about the current organization
+// GetOrganizationInfo - Gets information about the current organization
 // Returns information about the current authorized user's organization.
-func (s *organizations) ReadOrganizationInfo(ctx context.Context) (*operations.ReadOrganizationInfoResponse, error) {
+func (s *organizations) GetOrganizationInfo(ctx context.Context) (*operations.GetOrganizationInfoResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/v1/organizations/current"
 
@@ -57,7 +57,7 @@ func (s *organizations) ReadOrganizationInfo(ctx context.Context) (*operations.R
 
 	contentType := httpRes.Header.Get("Content-Type")
 
-	res := &operations.ReadOrganizationInfoResponse{
+	res := &operations.GetOrganizationInfoResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 		RawResponse: httpRes,

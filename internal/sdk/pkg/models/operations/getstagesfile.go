@@ -7,7 +7,7 @@ import (
 	"singlestore/internal/sdk/pkg/models/shared"
 )
 
-type ReadStagesFileRequest struct {
+type GetStagesFileRequest struct {
 	// If enabled, the API request returns only metadata
 	Metadata *bool `queryParam:"style=form,explode=true,name=metadata"`
 	// Path in Stages to a file or folder
@@ -16,7 +16,7 @@ type ReadStagesFileRequest struct {
 	WorkspaceGroupID string `pathParam:"style=simple,explode=false,name=workspaceGroupID"`
 }
 
-type ReadStagesFileResponse struct {
+type GetStagesFileResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
 	// OK

@@ -240,6 +240,276 @@ func (s *workspaceGroups) DeleteWorkspaceGroups(ctx context.Context, request ope
 	return res, nil
 }
 
+// GetWorkspaceGroups - Gets information about a workspace group
+// Returns information for the specified
+// workspace group ID, in JSON format. You must specify the workspace group ID in the API call.
+func (s *workspaceGroups) GetWorkspaceGroups(ctx context.Context, request operations.GetWorkspaceGroupsRequest) (*operations.GetWorkspaceGroupsResponse, error) {
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	url, err := utils.GenerateURL(ctx, baseURL, "/v1/workspaceGroups/{workspaceGroupID}", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
+
+	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
+		return nil, fmt.Errorf("error populating query params: %w", err)
+	}
+
+	client := s.sdkConfiguration.SecurityClient
+
+	httpRes, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %w", err)
+	}
+	if httpRes == nil {
+		return nil, fmt.Errorf("error sending request: no response")
+	}
+
+	rawBody, err := io.ReadAll(httpRes.Body)
+	if err != nil {
+		return nil, fmt.Errorf("error reading response body: %w", err)
+	}
+	httpRes.Body.Close()
+	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
+
+	contentType := httpRes.Header.Get("Content-Type")
+
+	res := &operations.GetWorkspaceGroupsResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: contentType,
+		RawResponse: httpRes,
+	}
+	switch {
+	case httpRes.StatusCode == 200:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out *shared.WorkspaceGroup
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out); err != nil {
+				return res, err
+			}
+
+			res.WorkspaceGroup = out
+		}
+	case httpRes.StatusCode == 400:
+		fallthrough
+	case httpRes.StatusCode == 401:
+		fallthrough
+	case httpRes.StatusCode == 404:
+		fallthrough
+	case httpRes.StatusCode == 429:
+		fallthrough
+	case httpRes.StatusCode == 500:
+	}
+
+	return res, nil
+}
+
+// GetPrivateConnectionWorkspaceGroups - Gets private connection information for a workspace group
+// Returns private connection information for the specified
+// workspace group ID, in JSON format. You must specify the workspace group ID in the API call.
+func (s *workspaceGroups) GetPrivateConnectionWorkspaceGroups(ctx context.Context, request operations.GetPrivateConnectionWorkspaceGroupsRequest) (*operations.GetPrivateConnectionWorkspaceGroupsResponse, error) {
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	url, err := utils.GenerateURL(ctx, baseURL, "/v1/workspaceGroups/{workspaceGroupID}/privateConnections", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
+
+	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
+		return nil, fmt.Errorf("error populating query params: %w", err)
+	}
+
+	client := s.sdkConfiguration.SecurityClient
+
+	httpRes, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %w", err)
+	}
+	if httpRes == nil {
+		return nil, fmt.Errorf("error sending request: no response")
+	}
+
+	rawBody, err := io.ReadAll(httpRes.Body)
+	if err != nil {
+		return nil, fmt.Errorf("error reading response body: %w", err)
+	}
+	httpRes.Body.Close()
+	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
+
+	contentType := httpRes.Header.Get("Content-Type")
+
+	res := &operations.GetPrivateConnectionWorkspaceGroupsResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: contentType,
+		RawResponse: httpRes,
+	}
+	switch {
+	case httpRes.StatusCode == 200:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out []shared.PrivateConnection
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out); err != nil {
+				return res, err
+			}
+
+			res.PrivateConnections = out
+		}
+	case httpRes.StatusCode == 400:
+		fallthrough
+	case httpRes.StatusCode == 401:
+		fallthrough
+	case httpRes.StatusCode == 404:
+		fallthrough
+	case httpRes.StatusCode == 429:
+		fallthrough
+	case httpRes.StatusCode == 500:
+	}
+
+	return res, nil
+}
+
+// GetRecoveryBackupWorkspaceGroups - Gets information about which regions you can setup as a disaster recovery backup
+// Returns a list of regions with regions IDs in JSON format. You must specify the workspace group ID of the group you are setting up for disaster recovery.
+func (s *workspaceGroups) GetRecoveryBackupWorkspaceGroups(ctx context.Context, request operations.GetRecoveryBackupWorkspaceGroupsRequest) (*operations.GetRecoveryBackupWorkspaceGroupsResponse, error) {
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	url, err := utils.GenerateURL(ctx, baseURL, "/v1/workspaceGroups/{workspaceGroupID}/storage/DR/regions", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
+
+	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
+		return nil, fmt.Errorf("error populating query params: %w", err)
+	}
+
+	client := s.sdkConfiguration.SecurityClient
+
+	httpRes, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %w", err)
+	}
+	if httpRes == nil {
+		return nil, fmt.Errorf("error sending request: no response")
+	}
+
+	rawBody, err := io.ReadAll(httpRes.Body)
+	if err != nil {
+		return nil, fmt.Errorf("error reading response body: %w", err)
+	}
+	httpRes.Body.Close()
+	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
+
+	contentType := httpRes.Header.Get("Content-Type")
+
+	res := &operations.GetRecoveryBackupWorkspaceGroupsResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: contentType,
+		RawResponse: httpRes,
+	}
+	switch {
+	case httpRes.StatusCode == 200:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out []shared.Region
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out); err != nil {
+				return res, err
+			}
+
+			res.Regions = out
+		}
+	case httpRes.StatusCode == 400:
+		fallthrough
+	case httpRes.StatusCode == 401:
+		fallthrough
+	case httpRes.StatusCode == 429:
+		fallthrough
+	case httpRes.StatusCode == 500:
+	}
+
+	return res, nil
+}
+
+// GetStorageStatusWorkspaceGroups - Gets information about the storage DR status of the workspace group
+// Returns the replication status of each database and the status of the latest Storage DR operation (Failover, Failback, etc.). You must specify the workspace group ID of the group that you are requesting status information for.
+func (s *workspaceGroups) GetStorageStatusWorkspaceGroups(ctx context.Context, request operations.GetStorageStatusWorkspaceGroupsRequest) (*operations.GetStorageStatusWorkspaceGroupsResponse, error) {
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	url, err := utils.GenerateURL(ctx, baseURL, "/v1/workspaceGroups/{workspaceGroupID}/storage/DR/status", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
+
+	client := s.sdkConfiguration.SecurityClient
+
+	httpRes, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %w", err)
+	}
+	if httpRes == nil {
+		return nil, fmt.Errorf("error sending request: no response")
+	}
+
+	rawBody, err := io.ReadAll(httpRes.Body)
+	if err != nil {
+		return nil, fmt.Errorf("error reading response body: %w", err)
+	}
+	httpRes.Body.Close()
+	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
+
+	contentType := httpRes.Header.Get("Content-Type")
+
+	res := &operations.GetStorageStatusWorkspaceGroupsResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: contentType,
+		RawResponse: httpRes,
+	}
+	switch {
+	case httpRes.StatusCode == 200:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out *shared.StorageDRStatus
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out); err != nil {
+				return res, err
+			}
+
+			res.StorageDRStatus = out
+		}
+	case httpRes.StatusCode == 400:
+		fallthrough
+	case httpRes.StatusCode == 401:
+		fallthrough
+	case httpRes.StatusCode == 429:
+		fallthrough
+	case httpRes.StatusCode == 500:
+	}
+
+	return res, nil
+}
+
 // ListWorkspaceGroup - Lists the workspace groups the user can access
 // Returns a list of all of the workspace groups accessible to the user. Use the `includeTerminated` parameter to get a list of terminated workspace groups.
 func (s *workspaceGroups) ListWorkspaceGroup(ctx context.Context, request operations.ListWorkspaceGroupRequest) (*operations.ListWorkspaceGroupResponse, error) {
@@ -291,276 +561,6 @@ func (s *workspaceGroups) ListWorkspaceGroup(ctx context.Context, request operat
 			}
 
 			res.WorkspaceGroups = out
-		}
-	case httpRes.StatusCode == 400:
-		fallthrough
-	case httpRes.StatusCode == 401:
-		fallthrough
-	case httpRes.StatusCode == 429:
-		fallthrough
-	case httpRes.StatusCode == 500:
-	}
-
-	return res, nil
-}
-
-// ReadWorkspaceGroups - Gets information about a workspace group
-// Returns information for the specified
-// workspace group ID, in JSON format. You must specify the workspace group ID in the API call.
-func (s *workspaceGroups) ReadWorkspaceGroups(ctx context.Context, request operations.ReadWorkspaceGroupsRequest) (*operations.ReadWorkspaceGroupsResponse, error) {
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url, err := utils.GenerateURL(ctx, baseURL, "/v1/workspaceGroups/{workspaceGroupID}", request, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error generating URL: %w", err)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
-
-	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
-		return nil, fmt.Errorf("error populating query params: %w", err)
-	}
-
-	client := s.sdkConfiguration.SecurityClient
-
-	httpRes, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
-	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
-	}
-
-	rawBody, err := io.ReadAll(httpRes.Body)
-	if err != nil {
-		return nil, fmt.Errorf("error reading response body: %w", err)
-	}
-	httpRes.Body.Close()
-	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.ReadWorkspaceGroupsResponse{
-		StatusCode:  httpRes.StatusCode,
-		ContentType: contentType,
-		RawResponse: httpRes,
-	}
-	switch {
-	case httpRes.StatusCode == 200:
-		switch {
-		case utils.MatchContentType(contentType, `application/json`):
-			var out *shared.WorkspaceGroup
-			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out); err != nil {
-				return res, err
-			}
-
-			res.WorkspaceGroup = out
-		}
-	case httpRes.StatusCode == 400:
-		fallthrough
-	case httpRes.StatusCode == 401:
-		fallthrough
-	case httpRes.StatusCode == 404:
-		fallthrough
-	case httpRes.StatusCode == 429:
-		fallthrough
-	case httpRes.StatusCode == 500:
-	}
-
-	return res, nil
-}
-
-// ReadPrivateConnectionWorkspaceGroups - Gets private connection information for a workspace group
-// Returns private connection information for the specified
-// workspace group ID, in JSON format. You must specify the workspace group ID in the API call.
-func (s *workspaceGroups) ReadPrivateConnectionWorkspaceGroups(ctx context.Context, request operations.ReadPrivateConnectionWorkspaceGroupsRequest) (*operations.ReadPrivateConnectionWorkspaceGroupsResponse, error) {
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url, err := utils.GenerateURL(ctx, baseURL, "/v1/workspaceGroups/{workspaceGroupID}/privateConnections", request, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error generating URL: %w", err)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
-
-	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
-		return nil, fmt.Errorf("error populating query params: %w", err)
-	}
-
-	client := s.sdkConfiguration.SecurityClient
-
-	httpRes, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
-	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
-	}
-
-	rawBody, err := io.ReadAll(httpRes.Body)
-	if err != nil {
-		return nil, fmt.Errorf("error reading response body: %w", err)
-	}
-	httpRes.Body.Close()
-	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.ReadPrivateConnectionWorkspaceGroupsResponse{
-		StatusCode:  httpRes.StatusCode,
-		ContentType: contentType,
-		RawResponse: httpRes,
-	}
-	switch {
-	case httpRes.StatusCode == 200:
-		switch {
-		case utils.MatchContentType(contentType, `application/json`):
-			var out []shared.PrivateConnection
-			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out); err != nil {
-				return res, err
-			}
-
-			res.PrivateConnections = out
-		}
-	case httpRes.StatusCode == 400:
-		fallthrough
-	case httpRes.StatusCode == 401:
-		fallthrough
-	case httpRes.StatusCode == 404:
-		fallthrough
-	case httpRes.StatusCode == 429:
-		fallthrough
-	case httpRes.StatusCode == 500:
-	}
-
-	return res, nil
-}
-
-// ReadRecoveryBackupWorkspaceGroups - Gets information about which regions you can setup as a disaster recovery backup
-// Returns a list of regions with regions IDs in JSON format. You must specify the workspace group ID of the group you are setting up for disaster recovery.
-func (s *workspaceGroups) ReadRecoveryBackupWorkspaceGroups(ctx context.Context, request operations.ReadRecoveryBackupWorkspaceGroupsRequest) (*operations.ReadRecoveryBackupWorkspaceGroupsResponse, error) {
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url, err := utils.GenerateURL(ctx, baseURL, "/v1/workspaceGroups/{workspaceGroupID}/storage/DR/regions", request, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error generating URL: %w", err)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
-
-	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
-		return nil, fmt.Errorf("error populating query params: %w", err)
-	}
-
-	client := s.sdkConfiguration.SecurityClient
-
-	httpRes, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
-	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
-	}
-
-	rawBody, err := io.ReadAll(httpRes.Body)
-	if err != nil {
-		return nil, fmt.Errorf("error reading response body: %w", err)
-	}
-	httpRes.Body.Close()
-	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.ReadRecoveryBackupWorkspaceGroupsResponse{
-		StatusCode:  httpRes.StatusCode,
-		ContentType: contentType,
-		RawResponse: httpRes,
-	}
-	switch {
-	case httpRes.StatusCode == 200:
-		switch {
-		case utils.MatchContentType(contentType, `application/json`):
-			var out []shared.Region
-			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out); err != nil {
-				return res, err
-			}
-
-			res.Regions = out
-		}
-	case httpRes.StatusCode == 400:
-		fallthrough
-	case httpRes.StatusCode == 401:
-		fallthrough
-	case httpRes.StatusCode == 429:
-		fallthrough
-	case httpRes.StatusCode == 500:
-	}
-
-	return res, nil
-}
-
-// ReadStorageStatusWorkspaceGroups - Gets information about the storage DR status of the workspace group
-// Returns the replication status of each database and the status of the latest Storage DR operation (Failover, Failback, etc.). You must specify the workspace group ID of the group that you are requesting status information for.
-func (s *workspaceGroups) ReadStorageStatusWorkspaceGroups(ctx context.Context, request operations.ReadStorageStatusWorkspaceGroupsRequest) (*operations.ReadStorageStatusWorkspaceGroupsResponse, error) {
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url, err := utils.GenerateURL(ctx, baseURL, "/v1/workspaceGroups/{workspaceGroupID}/storage/DR/status", request, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error generating URL: %w", err)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
-
-	client := s.sdkConfiguration.SecurityClient
-
-	httpRes, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
-	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
-	}
-
-	rawBody, err := io.ReadAll(httpRes.Body)
-	if err != nil {
-		return nil, fmt.Errorf("error reading response body: %w", err)
-	}
-	httpRes.Body.Close()
-	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.ReadStorageStatusWorkspaceGroupsResponse{
-		StatusCode:  httpRes.StatusCode,
-		ContentType: contentType,
-		RawResponse: httpRes,
-	}
-	switch {
-	case httpRes.StatusCode == 200:
-		switch {
-		case utils.MatchContentType(contentType, `application/json`):
-			var out *shared.StorageDRStatus
-			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out); err != nil {
-				return res, err
-			}
-
-			res.StorageDRStatus = out
 		}
 	case httpRes.StatusCode == 400:
 		fallthrough

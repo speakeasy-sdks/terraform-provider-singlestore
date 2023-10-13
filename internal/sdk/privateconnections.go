@@ -14,19 +14,19 @@ import (
 	"strings"
 )
 
-type privateConnection struct {
+type privateConnections struct {
 	sdkConfiguration sdkConfiguration
 }
 
-func newPrivateConnection(sdkConfig sdkConfiguration) *privateConnection {
-	return &privateConnection{
+func newPrivateConnections(sdkConfig sdkConfiguration) *privateConnections {
+	return &privateConnections{
 		sdkConfiguration: sdkConfig,
 	}
 }
 
 // CreatePrivateConnection - Creates a new private connection
 // Creates a new private connection. Upon successful completion of the request, a private connection is scheduled for creation. To query the private connection status, use the endpoints for the workspace group and workspace (if provided).
-func (s *privateConnection) CreatePrivateConnection(ctx context.Context, request shared.PrivateConnectionCreate) (*operations.CreatePrivateConnectionResponse, error) {
+func (s *privateConnections) CreatePrivateConnection(ctx context.Context, request shared.PrivateConnectionCreate) (*operations.CreatePrivateConnectionResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/v1/privateConnections"
 
@@ -100,7 +100,7 @@ func (s *privateConnection) CreatePrivateConnection(ctx context.Context, request
 
 // DeletePrivateConnection - Deletes a private connection
 // Deletes a private connection for the specified connection ID. Upon successful completion, a private connection is scheduled for deletion.
-func (s *privateConnection) DeletePrivateConnection(ctx context.Context, request operations.DeletePrivateConnectionRequest) (*operations.DeletePrivateConnectionResponse, error) {
+func (s *privateConnections) DeletePrivateConnection(ctx context.Context, request operations.DeletePrivateConnectionRequest) (*operations.DeletePrivateConnectionResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/v1/privateConnections/{connectionID}", request, nil)
 	if err != nil {
@@ -165,7 +165,7 @@ func (s *privateConnection) DeletePrivateConnection(ctx context.Context, request
 
 // GetPrivateConnection - Gets information about a private connection
 // Returns private connection information for the specified connection ID, in JSON format. You must specify the connection ID in the API call.
-func (s *privateConnection) GetPrivateConnection(ctx context.Context, request operations.GetPrivateConnectionRequest) (*operations.GetPrivateConnectionResponse, error) {
+func (s *privateConnections) GetPrivateConnection(ctx context.Context, request operations.GetPrivateConnectionRequest) (*operations.GetPrivateConnectionResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/v1/privateConnections/{connectionID}", request, nil)
 	if err != nil {
@@ -234,7 +234,7 @@ func (s *privateConnection) GetPrivateConnection(ctx context.Context, request op
 
 // UpdatePrivateConnection - Updates a private connection
 // Updates a private connection. You must specify the connection ID in the API call.
-func (s *privateConnection) UpdatePrivateConnection(ctx context.Context, request operations.UpdatePrivateConnectionRequest) (*operations.UpdatePrivateConnectionResponse, error) {
+func (s *privateConnections) UpdatePrivateConnection(ctx context.Context, request operations.UpdatePrivateConnectionRequest) (*operations.UpdatePrivateConnectionResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/v1/privateConnections/{connectionID}", request, nil)
 	if err != nil {

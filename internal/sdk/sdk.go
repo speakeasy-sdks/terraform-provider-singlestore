@@ -66,8 +66,8 @@ type Singlestore struct {
 	// Billing - Operations related to billing
 	Billing *billing
 	// Organizations - Operations related to organizations
-	Organizations     *organizations
-	PrivateConnection *privateConnection
+	Organizations      *organizations
+	PrivateConnections *privateConnections
 	// Regions - Operations related to regions
 	Regions *regions
 	// Stages - Operations related to stages
@@ -130,9 +130,9 @@ func New(opts ...SDKOption) *Singlestore {
 		sdkConfiguration: sdkConfiguration{
 			Language:          "terraform",
 			OpenAPIDocVersion: "1.1.33",
-			SDKVersion:        "0.1.2",
+			SDKVersion:        "0.1.3",
 			GenVersion:        "2.154.1",
-			UserAgent:         "speakeasy-sdk/terraform 0.1.2 2.154.1 1.1.33 singlestore",
+			UserAgent:         "speakeasy-sdk/terraform 0.1.3 2.154.1 1.1.33 singlestore",
 		},
 	}
 	for _, opt := range opts {
@@ -155,7 +155,7 @@ func New(opts ...SDKOption) *Singlestore {
 
 	sdk.Organizations = newOrganizations(sdk.sdkConfiguration)
 
-	sdk.PrivateConnection = newPrivateConnection(sdk.sdkConfiguration)
+	sdk.PrivateConnections = newPrivateConnections(sdk.sdkConfiguration)
 
 	sdk.Regions = newRegions(sdk.sdkConfiguration)
 

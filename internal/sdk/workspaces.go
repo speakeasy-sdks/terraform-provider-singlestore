@@ -366,6 +366,75 @@ func (s *workspaces) DeleteWorkspace(ctx context.Context, request operations.Del
 	return res, nil
 }
 
+// GetWorkspace - Gets information about a workspace
+// Returns workspace information for the specified workspace ID, in JSON format. You must specify the workspace ID in the API call.
+func (s *workspaces) GetWorkspace(ctx context.Context, request operations.GetWorkspaceRequest) (*operations.GetWorkspaceResponse, error) {
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	url, err := utils.GenerateURL(ctx, baseURL, "/v1/workspaces/{workspaceID}", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
+
+	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
+		return nil, fmt.Errorf("error populating query params: %w", err)
+	}
+
+	client := s.sdkConfiguration.SecurityClient
+
+	httpRes, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %w", err)
+	}
+	if httpRes == nil {
+		return nil, fmt.Errorf("error sending request: no response")
+	}
+
+	rawBody, err := io.ReadAll(httpRes.Body)
+	if err != nil {
+		return nil, fmt.Errorf("error reading response body: %w", err)
+	}
+	httpRes.Body.Close()
+	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
+
+	contentType := httpRes.Header.Get("Content-Type")
+
+	res := &operations.GetWorkspaceResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: contentType,
+		RawResponse: httpRes,
+	}
+	switch {
+	case httpRes.StatusCode == 200:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out *shared.Workspace
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out); err != nil {
+				return res, err
+			}
+
+			res.Workspace = out
+		}
+	case httpRes.StatusCode == 400:
+		fallthrough
+	case httpRes.StatusCode == 401:
+		fallthrough
+	case httpRes.StatusCode == 404:
+		fallthrough
+	case httpRes.StatusCode == 429:
+		fallthrough
+	case httpRes.StatusCode == 500:
+	}
+
+	return res, nil
+}
+
 // GetOutboundWorkspace - Gets the outbound allow list for a workspace
 // Returns the account ID which must be allowed for outbound connections.
 func (s *workspaces) GetOutboundWorkspace(ctx context.Context, request operations.GetOutboundWorkspaceRequest) (*operations.GetOutboundWorkspaceResponse, error) {
@@ -422,6 +491,205 @@ func (s *workspaces) GetOutboundWorkspace(ctx context.Context, request operation
 	case httpRes.StatusCode == 401:
 		fallthrough
 	case httpRes.StatusCode == 404:
+		fallthrough
+	case httpRes.StatusCode == 429:
+		fallthrough
+	case httpRes.StatusCode == 500:
+	}
+
+	return res, nil
+}
+
+// GetPrivateConnectionWorkspace - Gets private connection information for a workspace
+// Returns private connection information for the specified workspace ID, in JSON format. You must specify the workspace ID in the API call.
+func (s *workspaces) GetPrivateConnectionWorkspace(ctx context.Context, request operations.GetPrivateConnectionWorkspaceRequest) (*operations.GetPrivateConnectionWorkspaceResponse, error) {
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	url, err := utils.GenerateURL(ctx, baseURL, "/v1/workspaces/{workspaceID}/privateConnections", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
+
+	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
+		return nil, fmt.Errorf("error populating query params: %w", err)
+	}
+
+	client := s.sdkConfiguration.SecurityClient
+
+	httpRes, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %w", err)
+	}
+	if httpRes == nil {
+		return nil, fmt.Errorf("error sending request: no response")
+	}
+
+	rawBody, err := io.ReadAll(httpRes.Body)
+	if err != nil {
+		return nil, fmt.Errorf("error reading response body: %w", err)
+	}
+	httpRes.Body.Close()
+	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
+
+	contentType := httpRes.Header.Get("Content-Type")
+
+	res := &operations.GetPrivateConnectionWorkspaceResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: contentType,
+		RawResponse: httpRes,
+	}
+	switch {
+	case httpRes.StatusCode == 200:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out []shared.PrivateConnection
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out); err != nil {
+				return res, err
+			}
+
+			res.PrivateConnections = out
+		}
+	case httpRes.StatusCode == 400:
+		fallthrough
+	case httpRes.StatusCode == 401:
+		fallthrough
+	case httpRes.StatusCode == 404:
+		fallthrough
+	case httpRes.StatusCode == 429:
+		fallthrough
+	case httpRes.StatusCode == 500:
+	}
+
+	return res, nil
+}
+
+// GetRecoveryBackupWorkspace - Gets information about which regions you can setup as a disaster recovery backup
+// Returns a list of regions with regions IDs in JSON format. You must specify the workspace ID of a workspace in the group you are setting up for disaster recovery.
+func (s *workspaces) GetRecoveryBackupWorkspace(ctx context.Context, request operations.GetRecoveryBackupWorkspaceRequest) (*operations.GetRecoveryBackupWorkspaceResponse, error) {
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	url, err := utils.GenerateURL(ctx, baseURL, "/v1/workspaces/{workspaceID}/storage/DR/regions", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
+
+	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
+		return nil, fmt.Errorf("error populating query params: %w", err)
+	}
+
+	client := s.sdkConfiguration.SecurityClient
+
+	httpRes, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %w", err)
+	}
+	if httpRes == nil {
+		return nil, fmt.Errorf("error sending request: no response")
+	}
+
+	rawBody, err := io.ReadAll(httpRes.Body)
+	if err != nil {
+		return nil, fmt.Errorf("error reading response body: %w", err)
+	}
+	httpRes.Body.Close()
+	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
+
+	contentType := httpRes.Header.Get("Content-Type")
+
+	res := &operations.GetRecoveryBackupWorkspaceResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: contentType,
+		RawResponse: httpRes,
+	}
+	switch {
+	case httpRes.StatusCode == 200:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out []shared.Region
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out); err != nil {
+				return res, err
+			}
+
+			res.Regions = out
+		}
+	case httpRes.StatusCode == 400:
+		fallthrough
+	case httpRes.StatusCode == 401:
+		fallthrough
+	case httpRes.StatusCode == 429:
+		fallthrough
+	case httpRes.StatusCode == 500:
+	}
+
+	return res, nil
+}
+
+// GetStorageStatusWorkspace - Gets information about the storage DR status of the group in which the provided workspace belongs to
+// Returns the replication status of each database and the status of the latest Storage DR operation (Failover, Failback, etc.). You must specify the workspace ID of a workspace in the group for which you are requesting the status information.
+func (s *workspaces) GetStorageStatusWorkspace(ctx context.Context, request operations.GetStorageStatusWorkspaceRequest) (*operations.GetStorageStatusWorkspaceResponse, error) {
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	url, err := utils.GenerateURL(ctx, baseURL, "/v1/workspaces/{workspaceID}/storage/DR/status", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
+
+	client := s.sdkConfiguration.SecurityClient
+
+	httpRes, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %w", err)
+	}
+	if httpRes == nil {
+		return nil, fmt.Errorf("error sending request: no response")
+	}
+
+	rawBody, err := io.ReadAll(httpRes.Body)
+	if err != nil {
+		return nil, fmt.Errorf("error reading response body: %w", err)
+	}
+	httpRes.Body.Close()
+	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
+
+	contentType := httpRes.Header.Get("Content-Type")
+
+	res := &operations.GetStorageStatusWorkspaceResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: contentType,
+		RawResponse: httpRes,
+	}
+	switch {
+	case httpRes.StatusCode == 200:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out *shared.StorageDRStatus
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out); err != nil {
+				return res, err
+			}
+
+			res.StorageDRStatus = out
+		}
+	case httpRes.StatusCode == 400:
+		fallthrough
+	case httpRes.StatusCode == 401:
 		fallthrough
 	case httpRes.StatusCode == 429:
 		fallthrough
@@ -488,274 +756,6 @@ func (s *workspaces) ListWorkspace(ctx context.Context, request operations.ListW
 	case httpRes.StatusCode == 401:
 		fallthrough
 	case httpRes.StatusCode == 404:
-		fallthrough
-	case httpRes.StatusCode == 429:
-		fallthrough
-	case httpRes.StatusCode == 500:
-	}
-
-	return res, nil
-}
-
-// ReadWorkspace - Gets information about a workspace
-// Returns workspace information for the specified workspace ID, in JSON format. You must specify the workspace ID in the API call.
-func (s *workspaces) ReadWorkspace(ctx context.Context, request operations.ReadWorkspaceRequest) (*operations.ReadWorkspaceResponse, error) {
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url, err := utils.GenerateURL(ctx, baseURL, "/v1/workspaces/{workspaceID}", request, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error generating URL: %w", err)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
-
-	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
-		return nil, fmt.Errorf("error populating query params: %w", err)
-	}
-
-	client := s.sdkConfiguration.SecurityClient
-
-	httpRes, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
-	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
-	}
-
-	rawBody, err := io.ReadAll(httpRes.Body)
-	if err != nil {
-		return nil, fmt.Errorf("error reading response body: %w", err)
-	}
-	httpRes.Body.Close()
-	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.ReadWorkspaceResponse{
-		StatusCode:  httpRes.StatusCode,
-		ContentType: contentType,
-		RawResponse: httpRes,
-	}
-	switch {
-	case httpRes.StatusCode == 200:
-		switch {
-		case utils.MatchContentType(contentType, `application/json`):
-			var out *shared.Workspace
-			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out); err != nil {
-				return res, err
-			}
-
-			res.Workspace = out
-		}
-	case httpRes.StatusCode == 400:
-		fallthrough
-	case httpRes.StatusCode == 401:
-		fallthrough
-	case httpRes.StatusCode == 404:
-		fallthrough
-	case httpRes.StatusCode == 429:
-		fallthrough
-	case httpRes.StatusCode == 500:
-	}
-
-	return res, nil
-}
-
-// ReadPrivateConnectionWorkspace - Gets private connection information for a workspace
-// Returns private connection information for the specified workspace ID, in JSON format. You must specify the workspace ID in the API call.
-func (s *workspaces) ReadPrivateConnectionWorkspace(ctx context.Context, request operations.ReadPrivateConnectionWorkspaceRequest) (*operations.ReadPrivateConnectionWorkspaceResponse, error) {
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url, err := utils.GenerateURL(ctx, baseURL, "/v1/workspaces/{workspaceID}/privateConnections", request, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error generating URL: %w", err)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
-
-	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
-		return nil, fmt.Errorf("error populating query params: %w", err)
-	}
-
-	client := s.sdkConfiguration.SecurityClient
-
-	httpRes, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
-	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
-	}
-
-	rawBody, err := io.ReadAll(httpRes.Body)
-	if err != nil {
-		return nil, fmt.Errorf("error reading response body: %w", err)
-	}
-	httpRes.Body.Close()
-	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.ReadPrivateConnectionWorkspaceResponse{
-		StatusCode:  httpRes.StatusCode,
-		ContentType: contentType,
-		RawResponse: httpRes,
-	}
-	switch {
-	case httpRes.StatusCode == 200:
-		switch {
-		case utils.MatchContentType(contentType, `application/json`):
-			var out []shared.PrivateConnection
-			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out); err != nil {
-				return res, err
-			}
-
-			res.PrivateConnections = out
-		}
-	case httpRes.StatusCode == 400:
-		fallthrough
-	case httpRes.StatusCode == 401:
-		fallthrough
-	case httpRes.StatusCode == 404:
-		fallthrough
-	case httpRes.StatusCode == 429:
-		fallthrough
-	case httpRes.StatusCode == 500:
-	}
-
-	return res, nil
-}
-
-// ReadRecoveryBackupWorkspace - Gets information about which regions you can setup as a disaster recovery backup
-// Returns a list of regions with regions IDs in JSON format. You must specify the workspace ID of a workspace in the group you are setting up for disaster recovery.
-func (s *workspaces) ReadRecoveryBackupWorkspace(ctx context.Context, request operations.ReadRecoveryBackupWorkspaceRequest) (*operations.ReadRecoveryBackupWorkspaceResponse, error) {
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url, err := utils.GenerateURL(ctx, baseURL, "/v1/workspaces/{workspaceID}/storage/DR/regions", request, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error generating URL: %w", err)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
-
-	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
-		return nil, fmt.Errorf("error populating query params: %w", err)
-	}
-
-	client := s.sdkConfiguration.SecurityClient
-
-	httpRes, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
-	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
-	}
-
-	rawBody, err := io.ReadAll(httpRes.Body)
-	if err != nil {
-		return nil, fmt.Errorf("error reading response body: %w", err)
-	}
-	httpRes.Body.Close()
-	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.ReadRecoveryBackupWorkspaceResponse{
-		StatusCode:  httpRes.StatusCode,
-		ContentType: contentType,
-		RawResponse: httpRes,
-	}
-	switch {
-	case httpRes.StatusCode == 200:
-		switch {
-		case utils.MatchContentType(contentType, `application/json`):
-			var out []shared.Region
-			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out); err != nil {
-				return res, err
-			}
-
-			res.Regions = out
-		}
-	case httpRes.StatusCode == 400:
-		fallthrough
-	case httpRes.StatusCode == 401:
-		fallthrough
-	case httpRes.StatusCode == 429:
-		fallthrough
-	case httpRes.StatusCode == 500:
-	}
-
-	return res, nil
-}
-
-// ReadStorageStatusWorkspace - Gets information about the storage DR status of the group in which the provided workspace belongs to
-// Returns the replication status of each database and the status of the latest Storage DR operation (Failover, Failback, etc.). You must specify the workspace ID of a workspace in the group for which you are requesting the status information.
-func (s *workspaces) ReadStorageStatusWorkspace(ctx context.Context, request operations.ReadStorageStatusWorkspaceRequest) (*operations.ReadStorageStatusWorkspaceResponse, error) {
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url, err := utils.GenerateURL(ctx, baseURL, "/v1/workspaces/{workspaceID}/storage/DR/status", request, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error generating URL: %w", err)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
-
-	client := s.sdkConfiguration.SecurityClient
-
-	httpRes, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
-	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
-	}
-
-	rawBody, err := io.ReadAll(httpRes.Body)
-	if err != nil {
-		return nil, fmt.Errorf("error reading response body: %w", err)
-	}
-	httpRes.Body.Close()
-	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.ReadStorageStatusWorkspaceResponse{
-		StatusCode:  httpRes.StatusCode,
-		ContentType: contentType,
-		RawResponse: httpRes,
-	}
-	switch {
-	case httpRes.StatusCode == 200:
-		switch {
-		case utils.MatchContentType(contentType, `application/json`):
-			var out *shared.StorageDRStatus
-			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out); err != nil {
-				return res, err
-			}
-
-			res.StorageDRStatus = out
-		}
-	case httpRes.StatusCode == 400:
-		fallthrough
-	case httpRes.StatusCode == 401:
 		fallthrough
 	case httpRes.StatusCode == 429:
 		fallthrough
