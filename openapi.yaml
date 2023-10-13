@@ -870,7 +870,7 @@ paths:
       summary: Lists the compute and storage usage of a organization
       operationId: listBillingUsage
       x-speakeasy-name-override: list
-      x-speakeasy-entity-operation: Billing#create
+      x-speakeasy-entity-operation: Billing#list
       x-speakeasy-group: Billing
       tags:
       - Billing [Beta]
