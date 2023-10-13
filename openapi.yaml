@@ -895,6 +895,7 @@ paths:
       summary: Gets information about the current organization
       operationId: readOrganizationInfo
       x-speakeasy-name-override: read
+      x-speakeasy-entity-operation: Organizations#read
       x-speakeasy-group: Organizations
       tags:
       - Organizations
@@ -932,6 +933,7 @@ paths:
       summary: Creates a new private connection
       operationId: createPrivateConnection
       x-speakeasy-name-override: create
+      x-speakeasy-entity-operation: PrivateConnection#create
       x-speakeasy-group: PrivateConnection
       tags:
       - Private Connections
@@ -963,6 +965,7 @@ paths:
       summary: Deletes a private connection
       operationId: deletePrivateConnection
       x-speakeasy-name-override: delete
+      x-speakeasy-entity-operation: PrivateConnectionDelete#create
       x-speakeasy-group: PrivateConnection
       tags:
       - Private Connections
@@ -990,8 +993,9 @@ paths:
         "500":
           description: Internal server error
       summary: Gets information about a private connection
-      operationId: readPrivateConnection
-      x-speakeasy-name-override: read
+      operationId: getPrivateConnection
+      x-speakeasy-name-override: get
+      x-speakeasy-entity-operation: PrivateConnectionGet#create
       x-speakeasy-group: PrivateConnection
       tags:
       - Private Connections
@@ -1030,6 +1034,7 @@ paths:
       summary: Updates a private connection
       operationId: updatePrivateConnection
       x-speakeasy-name-override: update
+      x-speakeasy-entity-operation: PrivateConnectionUpdate#create
       x-speakeasy-group: PrivateConnection
       tags:
       - Private Connections
@@ -1065,6 +1070,7 @@ paths:
       summary: Lists all of the regions for the user that support workspaces
       operationId: listRegions
       x-speakeasy-name-override: list
+      x-speakeasy-entity-operation: Regions#list
       x-speakeasy-group: Regions
       tags:
       - Regions
@@ -1118,6 +1124,7 @@ paths:
       summary: Deletes a file or folder
       operationId: deleteStagesFile
       x-speakeasy-name-override: delete
+      x-speakeasy-entity-operation: Stages#delete
       x-speakeasy-group: Stages
       tags:
       - Stages
@@ -1177,6 +1184,7 @@ paths:
       summary: Gets information about a folder or downloads a file
       operationId: readStagesFile
       x-speakeasy-name-override: read
+      x-speakeasy-entity-operation: Stages#read
       x-speakeasy-group: Stages
       tags:
       - Stages
@@ -1236,6 +1244,7 @@ paths:
       summary: Modifies a file or folder in Stages
       operationId: updateStagesFile
       x-speakeasy-name-override: update
+      x-speakeasy-entity-operation: Stages#update
       x-speakeasy-group: Stages
       tags:
       - Stages
@@ -1299,6 +1308,7 @@ paths:
       summary: Creates a new folder or uploads a file
       operationId: createStagesFile
       x-speakeasy-name-override: create
+      x-speakeasy-entity-operation: Stages#create
       x-speakeasy-group: Stages
       tags:
       - Stages
@@ -1338,6 +1348,7 @@ paths:
       summary: Lists the workspace groups the user can access
       operationId: listWorkspaceGroup
       x-speakeasy-name-override: list
+      x-speakeasy-entity-operation: WorkspaceGroups#list
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1374,6 +1385,7 @@ paths:
       summary: Creates a new workspace group
       operationId: createWorkspaceGroup
       x-speakeasy-name-override: create
+      x-speakeasy-entity-operation: WorkspaceGroups#create
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1413,6 +1425,7 @@ paths:
       summary: Terminates a workspace group
       operationId: deleteWorkspaceGroups
       x-speakeasy-name-override: delete
+      x-speakeasy-entity-operation: WorkspaceGroups#delete
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1449,6 +1462,7 @@ paths:
       summary: Gets information about a workspace group
       operationId: readWorkspaceGroups
       x-speakeasy-name-override: read
+      x-speakeasy-entity-operation: WorkspaceGroups#read
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1486,6 +1500,7 @@ paths:
       summary: Updates a workspace group
       operationId: updateWorkspaceGroups
       x-speakeasy-name-override: update
+      x-speakeasy-entity-operation: WorkspaceGroups#update
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1517,6 +1532,7 @@ paths:
       summary: Gets private connection information for a workspace group
       operationId: readPrivateConnectionWorkspaceGroups
       x-speakeasy-name-override: read_private_connection
+      x-speakeasy-entity-operation: WorkspaceGroupsPrivateConnection#read
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1540,6 +1556,7 @@ paths:
       summary: Starts failback to the primary region
       operationId: updateFailbackWorkspaceGroups
       x-speakeasy-name-override: update_failback
+      x-speakeasy-entity-operation: WorkspaceGroupsFailback#update
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1563,6 +1580,7 @@ paths:
       summary: Starts failover to the secondary region
       operationId: updateFailoverWorkspaceGroups
       x-speakeasy-name-override: update_failover
+      x-speakeasy-entity-operation: WorkspaceGroupsFailover#update
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1593,6 +1611,7 @@ paths:
         backup
       operationId: readRecoveryBackupWorkspaceGroups
       x-speakeasy-name-override: read_recovery_backup
+      x-speakeasy-entity-operation: WorkspaceGroupsRecoveryBackup#read
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1649,6 +1668,7 @@ paths:
       summary: Starts Failover test mode
       operationId: updateStartFailoverTestModeWorkspaceGroups
       x-speakeasy-name-override: update_start_failover_test_mode
+      x-speakeasy-entity-operation: WorkspaceGroupsStartFailoverTestMode#update
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1678,6 +1698,7 @@ paths:
       summary: Gets information about the storage DR status of the workspace group
       operationId: readStorageStatusWorkspaceGroups
       x-speakeasy-name-override: read_storage_status
+      x-speakeasy-entity-operation: WorkspaceGroupsStorageStatus#read
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1703,6 +1724,7 @@ paths:
       summary: Stops Failover test mode
       operationId: updateStopFailoverTestModeWorkspaceGroups
       x-speakeasy-name-override: update_stop_failover_test_mode
+      x-speakeasy-entity-operation: WorkspaceGroupsStopFailoverTestMode#update
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1753,6 +1775,7 @@ paths:
       summary: Lists the workspaces the user can access
       operationId: listWorkspace
       x-speakeasy-name-override: list
+      x-speakeasy-entity-operation: Workspaces#list
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -1788,6 +1811,7 @@ paths:
       summary: Creates a new workspace
       operationId: createWorkspace
       x-speakeasy-name-override: create
+      x-speakeasy-entity-operation: Workspaces#create
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -1821,6 +1845,7 @@ paths:
       summary: Terminates a workspace
       operationId: deleteWorkspace
       x-speakeasy-name-override: delete
+      x-speakeasy-entity-operation: Workspaces#delete
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -1858,6 +1883,7 @@ paths:
       summary: Gets information about a workspace
       operationId: readWorkspace
       x-speakeasy-name-override: read
+      x-speakeasy-entity-operation: Workspaces#read
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -1897,6 +1923,7 @@ paths:
       summary: Updates information about a workspace
       operationId: updateWorkspace
       x-speakeasy-name-override: update
+      x-speakeasy-entity-operation: Workspaces#update
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -1927,6 +1954,7 @@ paths:
       summary: Gets private connection information for a workspace
       operationId: readPrivateConnectionWorkspace
       x-speakeasy-name-override: read_private_connection
+      x-speakeasy-entity-operation: WorkspacesPrivateConnection#list
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -1955,6 +1983,7 @@ paths:
       summary: Gets the outbound allow list for a workspace
       operationId: getOutboundWorkspace
       x-speakeasy-name-override: get_outbound
+      x-speakeasy-entity-operation: WorkspacesOutbound#get
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -1986,6 +2015,7 @@ paths:
       summary: Resumes a workspace
       operationId: createResumeWorkspace
       x-speakeasy-name-override: create_resume
+      x-speakeasy-entity-operation: WorkspacesResume#create
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -2009,6 +2039,7 @@ paths:
       summary: Starts failback to the primary region
       operationId: updateFailbackWorkspace
       x-speakeasy-name-override: update_failback
+      x-speakeasy-entity-operation: WorkspacesFailback#update
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -2032,6 +2063,7 @@ paths:
       summary: Starts failover to the secondary region
       operationId: updateFailoverWorkspace
       x-speakeasy-name-override: update_failover
+      x-speakeasy-entity-operation: WorkspacesFailover#update
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -2062,6 +2094,7 @@ paths:
         backup
       operationId: readRecoveryBackupWorkspace
       x-speakeasy-name-override: read_recovery_backup
+      x-speakeasy-entity-operation: WorkspacesRecoveryBackup#read
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -2095,6 +2128,7 @@ paths:
         of the request.
       operationId: createStorageWorkspace
       x-speakeasy-name-override: create_storage
+      x-speakeasy-entity-operation: WorkspacesStorage#create
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -2120,6 +2154,7 @@ paths:
       summary: Starts Failover test mode
       operationId: updateStartFailoverTestModeWorkspace
       x-speakeasy-name-override: update_start_failover_test_mode
+      x-speakeasy-entity-operation: WorkspacesStartFailoverTestMode#update
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -2150,6 +2185,7 @@ paths:
         the provided workspace belongs to
       operationId: readStorageStatusWorkspace
       x-speakeasy-name-override: read_storage_status
+      x-speakeasy-entity-operation: WorkspacesStorageStatus#read
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -2175,6 +2211,7 @@ paths:
       summary: Stops Failover test mode
       operationId: updateStopFailoverTestModeWorkspace
       x-speakeasy-name-override: update_stop_failover_test_mode
+      x-speakeasy-entity-operation: WorkspacesStopFailoverTestMode#update
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -2206,6 +2243,7 @@ paths:
       summary: Suspends a workspace
       operationId: createSuspendWorkspace
       x-speakeasy-name-override: create_suspend
+      x-speakeasy-entity-operation: WorkspacesSuspend#create
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
