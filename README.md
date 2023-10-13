@@ -71,7 +71,7 @@ terraform {
   required_providers {
     singlestore = {
       source  = "Singlestore/singlestore"
-      version = "0.1.1"
+      version = "0.1.2"
     }
   }
 }
@@ -111,8 +111,6 @@ TF_REATTACH_PROVIDERS=... terraform apply
 
 
 <!-- Start Dev Containers -->
-
-
 
 <!-- End Dev Containers -->
 

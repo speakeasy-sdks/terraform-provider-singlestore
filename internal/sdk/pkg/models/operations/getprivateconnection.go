@@ -7,14 +7,14 @@ import (
 	"singlestore/internal/sdk/pkg/models/shared"
 )
 
-type ReadPrivateConnectionRequest struct {
+type GetPrivateConnectionRequest struct {
 	// ID of the private connection
 	ConnectionID string `pathParam:"style=simple,explode=false,name=connectionID"`
 	// Comma-separated values list that correspond to the filtered fields for returned entities
 	Fields *string `queryParam:"style=form,explode=true,name=fields"`
 }
 
-type ReadPrivateConnectionResponse struct {
+type GetPrivateConnectionResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
 	// OK

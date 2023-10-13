@@ -163,9 +163,9 @@ func (s *privateConnection) DeletePrivateConnection(ctx context.Context, request
 	return res, nil
 }
 
-// ReadPrivateConnection - Gets information about a private connection
+// GetPrivateConnection - Gets information about a private connection
 // Returns private connection information for the specified connection ID, in JSON format. You must specify the connection ID in the API call.
-func (s *privateConnection) ReadPrivateConnection(ctx context.Context, request operations.ReadPrivateConnectionRequest) (*operations.ReadPrivateConnectionResponse, error) {
+func (s *privateConnection) GetPrivateConnection(ctx context.Context, request operations.GetPrivateConnectionRequest) (*operations.GetPrivateConnectionResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/v1/privateConnections/{connectionID}", request, nil)
 	if err != nil {
@@ -202,7 +202,7 @@ func (s *privateConnection) ReadPrivateConnection(ctx context.Context, request o
 
 	contentType := httpRes.Header.Get("Content-Type")
 
-	res := &operations.ReadPrivateConnectionResponse{
+	res := &operations.GetPrivateConnectionResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 		RawResponse: httpRes,

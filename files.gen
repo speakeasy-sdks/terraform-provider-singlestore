@@ -57,7 +57,7 @@ internal/sdk/pkg/models/operations/listbillingusage.go
 internal/sdk/pkg/models/operations/readorganizationinfo.go
 internal/sdk/pkg/models/operations/createprivateconnection.go
 internal/sdk/pkg/models/operations/deleteprivateconnection.go
-internal/sdk/pkg/models/operations/readprivateconnection.go
+internal/sdk/pkg/models/operations/getprivateconnection.go
 internal/sdk/pkg/models/operations/updateprivateconnection.go
 internal/sdk/pkg/models/operations/listregions.go
 internal/sdk/pkg/models/operations/createstagesfile.go
@@ -127,4 +127,7 @@ internal/sdk/pkg/models/shared/createstagesfilerequest1.go
 USAGE.md
 internal/provider/provider.go
 examples/provider/provider.tf
+internal/provider/privateconnection_resource.go
+internal/provider/privateconnection_resource_sdk.go
+examples/resources/singlestore_private_connection/resource.tf
 .gitattributes

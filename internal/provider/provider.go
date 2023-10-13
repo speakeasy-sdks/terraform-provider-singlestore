@@ -85,7 +85,9 @@ func (p *SinglestoreProvider) Configure(ctx context.Context, req provider.Config
 }
 
 func (p *SinglestoreProvider) Resources(ctx context.Context) []func() resource.Resource {
-	return []func() resource.Resource{}
+	return []func() resource.Resource{
+		NewPrivateConnectionResource,
+	}
 }
 
 func (p *SinglestoreProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
