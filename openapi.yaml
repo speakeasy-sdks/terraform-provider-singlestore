@@ -893,9 +893,9 @@ paths:
         "500":
           description: Internal server error
       summary: Gets information about the current organization
-      operationId: readOrganizationInfo
-      x-speakeasy-name-override: read
-      x-speakeasy-entity-operation: Organizations#read
+      operationId: getOrganizationInfo
+      x-speakeasy-name-override: get
+      x-speakeasy-entity-operation: Organizations#get
       x-speakeasy-group: Organizations
       tags:
       - Organizations
@@ -933,8 +933,8 @@ paths:
       summary: Creates a new private connection
       operationId: createPrivateConnection
       x-speakeasy-name-override: create
-      x-speakeasy-entity-operation: PrivateConnection#create
-      x-speakeasy-group: PrivateConnection
+      x-speakeasy-entity-operation: PrivateConnections#create
+      x-speakeasy-group: PrivateConnections
       tags:
       - Private Connections
   /v1/privateConnections/{connectionID}:
@@ -965,8 +965,8 @@ paths:
       summary: Deletes a private connection
       operationId: deletePrivateConnection
       x-speakeasy-name-override: delete
-      x-speakeasy-entity-operation: PrivateConnectionDelete#create
-      x-speakeasy-group: PrivateConnection
+      x-speakeasy-entity-operation: PrivateConnections#delete
+      x-speakeasy-group: PrivateConnections
       tags:
       - Private Connections
     get:
@@ -995,8 +995,8 @@ paths:
       summary: Gets information about a private connection
       operationId: getPrivateConnection
       x-speakeasy-name-override: get
-      x-speakeasy-entity-operation: PrivateConnectionGet#create
-      x-speakeasy-group: PrivateConnection
+      x-speakeasy-entity-operation: PrivateConnections#get
+      x-speakeasy-group: PrivateConnections
       tags:
       - Private Connections
     patch:
@@ -1034,8 +1034,8 @@ paths:
       summary: Updates a private connection
       operationId: updatePrivateConnection
       x-speakeasy-name-override: update
-      x-speakeasy-entity-operation: PrivateConnectionUpdate#create
-      x-speakeasy-group: PrivateConnection
+      x-speakeasy-entity-operation: PrivateConnections#update
+      x-speakeasy-group: PrivateConnections
       tags:
       - Private Connections
   /v1/regions:
@@ -1182,9 +1182,9 @@ paths:
         "500":
           description: Internal server error
       summary: Gets information about a folder or downloads a file
-      operationId: readStagesFile
-      x-speakeasy-name-override: read
-      x-speakeasy-entity-operation: Stages#read
+      operationId: getStagesFile
+      x-speakeasy-name-override: get
+      x-speakeasy-entity-operation: Stages#get
       x-speakeasy-group: Stages
       tags:
       - Stages
@@ -1460,9 +1460,9 @@ paths:
         "500":
           description: Internal server error
       summary: Gets information about a workspace group
-      operationId: readWorkspaceGroups
-      x-speakeasy-name-override: read
-      x-speakeasy-entity-operation: WorkspaceGroups#read
+      operationId: getWorkspaceGroups
+      x-speakeasy-name-override: get
+      x-speakeasy-entity-operation: WorkspaceGroups#get
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1530,9 +1530,9 @@ paths:
         "500":
           description: Internal server error
       summary: Gets private connection information for a workspace group
-      operationId: readPrivateConnectionWorkspaceGroups
-      x-speakeasy-name-override: read_private_connection
-      x-speakeasy-entity-operation: WorkspaceGroupsPrivateConnection#read
+      operationId: getPrivateConnectionWorkspaceGroups
+      x-speakeasy-name-override: get_private_connection
+      x-speakeasy-entity-operation: WorkspaceGroups#get
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1556,7 +1556,7 @@ paths:
       summary: Starts failback to the primary region
       operationId: updateFailbackWorkspaceGroups
       x-speakeasy-name-override: update_failback
-      x-speakeasy-entity-operation: WorkspaceGroupsFailback#update
+      x-speakeasy-entity-operation: WorkspaceGroups#update
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1580,7 +1580,7 @@ paths:
       summary: Starts failover to the secondary region
       operationId: updateFailoverWorkspaceGroups
       x-speakeasy-name-override: update_failover
-      x-speakeasy-entity-operation: WorkspaceGroupsFailover#update
+      x-speakeasy-entity-operation: WorkspaceGroups#update
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1609,9 +1609,9 @@ paths:
           description: Internal server error
       summary: Gets information about which regions you can setup as a disaster recovery
         backup
-      operationId: readRecoveryBackupWorkspaceGroups
-      x-speakeasy-name-override: read_recovery_backup
-      x-speakeasy-entity-operation: WorkspaceGroupsRecoveryBackup#read
+      operationId: getRecoveryBackupWorkspaceGroups
+      x-speakeasy-name-override: get_recovery_backup
+      x-speakeasy-entity-operation: WorkspaceGroups#get
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1644,6 +1644,7 @@ paths:
         databases to be replicated are provided as part of the request.
       operationId: createStorageWorkspaceGroups
       x-speakeasy-name-override: create_storage
+      x-speakeasy-entity-operation: WorkspaceGroups#create
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1668,7 +1669,7 @@ paths:
       summary: Starts Failover test mode
       operationId: updateStartFailoverTestModeWorkspaceGroups
       x-speakeasy-name-override: update_start_failover_test_mode
-      x-speakeasy-entity-operation: WorkspaceGroupsStartFailoverTestMode#update
+      x-speakeasy-entity-operation: WorkspaceGroups#update
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1696,9 +1697,9 @@ paths:
         "500":
           description: Internal server error
       summary: Gets information about the storage DR status of the workspace group
-      operationId: readStorageStatusWorkspaceGroups
-      x-speakeasy-name-override: read_storage_status
-      x-speakeasy-entity-operation: WorkspaceGroupsStorageStatus#read
+      operationId: getStorageStatusWorkspaceGroups
+      x-speakeasy-name-override: get_storage_status
+      x-speakeasy-entity-operation: WorkspaceGroups#get
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1724,7 +1725,7 @@ paths:
       summary: Stops Failover test mode
       operationId: updateStopFailoverTestModeWorkspaceGroups
       x-speakeasy-name-override: update_stop_failover_test_mode
-      x-speakeasy-entity-operation: WorkspaceGroupsStopFailoverTestMode#update
+      x-speakeasy-entity-operation: WorkspaceGroups#update
       x-speakeasy-group: WorkspaceGroups
       tags:
       - Workspace Groups
@@ -1881,9 +1882,9 @@ paths:
         "500":
           description: Internal server error
       summary: Gets information about a workspace
-      operationId: readWorkspace
-      x-speakeasy-name-override: read
-      x-speakeasy-entity-operation: Workspaces#read
+      operationId: getWorkspace
+      x-speakeasy-name-override: get
+      x-speakeasy-entity-operation: Workspaces#get
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -1952,9 +1953,9 @@ paths:
         "500":
           description: Internal server error
       summary: Gets private connection information for a workspace
-      operationId: readPrivateConnectionWorkspace
-      x-speakeasy-name-override: read_private_connection
-      x-speakeasy-entity-operation: WorkspacesPrivateConnection#list
+      operationId: getPrivateConnectionWorkspace
+      x-speakeasy-name-override: get_private_connection
+      x-speakeasy-entity-operation: Workspaces#get
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -1983,7 +1984,7 @@ paths:
       summary: Gets the outbound allow list for a workspace
       operationId: getOutboundWorkspace
       x-speakeasy-name-override: get_outbound
-      x-speakeasy-entity-operation: WorkspacesOutbound#get
+      x-speakeasy-entity-operation: Workspaces#get
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -2015,7 +2016,7 @@ paths:
       summary: Resumes a workspace
       operationId: createResumeWorkspace
       x-speakeasy-name-override: create_resume
-      x-speakeasy-entity-operation: WorkspacesResume#create
+      x-speakeasy-entity-operation: Workspaces#create
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -2039,7 +2040,7 @@ paths:
       summary: Starts failback to the primary region
       operationId: updateFailbackWorkspace
       x-speakeasy-name-override: update_failback
-      x-speakeasy-entity-operation: WorkspacesFailback#update
+      x-speakeasy-entity-operation: Workspaces#update
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -2063,7 +2064,7 @@ paths:
       summary: Starts failover to the secondary region
       operationId: updateFailoverWorkspace
       x-speakeasy-name-override: update_failover
-      x-speakeasy-entity-operation: WorkspacesFailover#update
+      x-speakeasy-entity-operation: Workspaces#update
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -2092,9 +2093,9 @@ paths:
           description: Internal server error
       summary: Gets information about which regions you can setup as a disaster recovery
         backup
-      operationId: readRecoveryBackupWorkspace
-      x-speakeasy-name-override: read_recovery_backup
-      x-speakeasy-entity-operation: WorkspacesRecoveryBackup#read
+      operationId: getRecoveryBackupWorkspace
+      x-speakeasy-name-override: get_recovery_backup
+      x-speakeasy-entity-operation: Workspaces#get
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -2128,7 +2129,7 @@ paths:
         of the request.
       operationId: createStorageWorkspace
       x-speakeasy-name-override: create_storage
-      x-speakeasy-entity-operation: WorkspacesStorage#create
+      x-speakeasy-entity-operation: Workspaces#create
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -2154,7 +2155,7 @@ paths:
       summary: Starts Failover test mode
       operationId: updateStartFailoverTestModeWorkspace
       x-speakeasy-name-override: update_start_failover_test_mode
-      x-speakeasy-entity-operation: WorkspacesStartFailoverTestMode#update
+      x-speakeasy-entity-operation: Workspaces#update
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -2183,9 +2184,9 @@ paths:
           description: Internal server error
       summary: Gets information about the storage DR status of the group in which
         the provided workspace belongs to
-      operationId: readStorageStatusWorkspace
-      x-speakeasy-name-override: read_storage_status
-      x-speakeasy-entity-operation: WorkspacesStorageStatus#read
+      operationId: getStorageStatusWorkspace
+      x-speakeasy-name-override: get_storage_status
+      x-speakeasy-entity-operation: Workspaces#get
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -2211,7 +2212,7 @@ paths:
       summary: Stops Failover test mode
       operationId: updateStopFailoverTestModeWorkspace
       x-speakeasy-name-override: update_stop_failover_test_mode
-      x-speakeasy-entity-operation: WorkspacesStopFailoverTestMode#update
+      x-speakeasy-entity-operation: Workspaces#update
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
@@ -2243,7 +2244,7 @@ paths:
       summary: Suspends a workspace
       operationId: createSuspendWorkspace
       x-speakeasy-name-override: create_suspend
-      x-speakeasy-entity-operation: WorkspacesSuspend#create
+      x-speakeasy-entity-operation: Workspaces#create
       x-speakeasy-group: Workspaces
       tags:
       - Workspaces
