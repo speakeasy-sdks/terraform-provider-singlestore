@@ -1,0 +1,2211 @@
+openapi: 3.0.0
+info:
+  contact:
+    name: SingleStore Support
+    url: https://www.singlestore.com/support/
+  description: |
+    The `Management` API can be used to create and manage workspaces, workspace groups, private connections, etc. SingleStore recommends reading the [`Management` API Overview](https://docs.singlestore.com/managed-service/en/reference/management-api.html) before getting started with the API reference.
+
+    All the URLs referenced in this API documentation use the `https://api.singlestore.com` service endpoint as their base.
+  title: SingleStore Management API
+  version: 1.1.33
+servers:
+- url: https://api.singlestore.com
+security:
+- ApiKeyAuth: []
+tags:
+  - name: Billing
+    description: Operations related to billing
+  - name: Billing [Beta]
+    description: Beta operations related to billing
+  - name: Organizations
+    description: Operations related to organizations
+  - name: Private Connections
+    description: Operations related to private connections
+  - name: Regions
+    description: Operations related to regions
+  - name: Stages
+    description: Operations related to stages
+  - name: Workspace Groups
+    description: Operations related to workspace groups
+  - name: Workspaces
+    description: Operations related to workspaces
+components:
+  parameters:
+    connectionID:
+      description: ID of the private connection
+      in: path
+      name: connectionID
+      required: true
+      schema:
+        format: uuid
+        type: string
+    fields:
+      description: Comma-separated values list that correspond to the filtered fields
+        for returned entities
+      in: query
+      name: fields
+      schema:
+        type: string
+    workspaceGroupID:
+      description: ID of the workspace group
+      in: path
+      name: workspaceGroupID
+      required: true
+      schema:
+        format: uuid
+        type: string
+    workspaceID:
+      description: ID of the workspace
+      in: path
+      name: workspaceID
+      required: true
+      schema:
+        format: uuid
+        type: string
+  schemas:
+    CreatePrivateConnectionResponse:
+      x-speakeasy-entity: PrivateConnection
+      properties:
+        privateConnectionID:
+          format: uuid
+          type: string
+      required:
+      - privateConnectionID
+      type: object
+    CreateStagesFileRequest:
+      x-speakeasy-entity: Workspace
+      properties:
+        file:
+          description: File to upload
+          format: binary
+          type: string
+      type: object
+    CreateWorkspace:
+      x-speakeasy-entity: Workspace
+      properties:
+        workspaceID:
+          format: uuid
+          type: string
+      required:
+      - workspaceID
+      type: object
+    UpdateWorkspaceGroups:
+      x-speakeasy-entity: WorkspaceGroup
+      properties:
+        workspaceGroupID:
+          format: uuid
+          type: string
+      required:
+      - workspaceGroupID
+      type: object
+    TerminateWorkspaceGroups:
+      x-speakeasy-entity: WorkspaceGroup
+      properties:
+        workspaceGroupID:
+          format: uuid
+          type: string
+      required:
+      - workspaceGroupID
+      type: object
+    CreateWorkspaceGroup:
+      x-speakeasy-entity: WorkspaceGroup
+      properties:
+        adminPassword:
+          type: string
+        workspaceGroupID:
+          format: uuid
+          type: string
+      required:
+      - workspaceGroupID
+      type: object
+    CreateStagesFile:
+      x-speakeasy-entity: Stage
+      properties:
+        name:
+          example: file.json
+          type: string
+        path:
+          example: /parent_folder/sample_folder
+          type: string
+      type: object
+    ModifyStagesFile:
+      x-speakeasy-entity: Stage
+      properties:
+        name:
+          description: sample_file.txt
+          type: string
+        path:
+          description: parent_folder/sample_file.txt
+          type: string
+      type: object
+    DeleteStagesFile:
+      x-speakeasy-entity: Stage
+      properties:
+        name:
+          description: sample_file.txt
+          type: string
+        path:
+          description: parent_folder/sample_file.txt
+          type: string
+      type: object
+    UpdatePrivateConnectionResponse:
+      x-speakeasy-entity: PrivateConnection
+      properties:
+        privateConnectionID:
+          format: uuid
+          type: string
+      required:
+      - privateConnectionID
+      type: object
+    DeletePrivateConnection:
+      x-speakeasy-entity: PrivateConnection
+      properties:
+        privateConnectionID:
+          format: uuid
+          type: string
+      required:
+      - privateConnectionID
+      type: object
+    BillingUsage:
+      x-speakeasy-entity: Billing
+      description: Represents a billing usage entity
+      properties:
+        description:
+          description: What the unit indicates
+          type: string
+        metric:
+          description: The metric name
+          type: string
+        usage:
+          items:
+            properties:
+              endTime:
+                type: string
+              ownerId:
+                type: string
+              resourceId:
+                type: string
+              resourceName:
+                type: string
+              resourceType:
+                type: string
+              startTime:
+                type: string
+              value:
+                type: string
+            type: object
+          type: array
+      type: object
+    Organization:
+      x-speakeasy-entity: Organization
+      description: Represents information related to an organization
+      properties:
+        firewallRanges:
+          description: The list of allowed IP addresses which can access the Management
+            API
+          items:
+            type: string
+          type: array
+        name:
+          description: Name of the organization
+          type: string
+        orgID:
+          description: ID of the organization
+          format: uuid
+          type: string
+      required:
+      - orgID
+      type: object
+    PrivateConnections:
+      type: array
+      items:
+        $ref: '#/components/schemas/PrivateConnection'
+    PrivateConnection:
+      x-speakeasy-entity: PrivateConnection
+      description: Represents information related to a private link connection
+      properties:
+        activeAt:
+          description: The timestamp of when the private connection became active
+          example: "2023-09-18T09:56:56Z"
+          type: string
+        allowList:
+          description: The private connection allow list. This is the account ID for
+            AWS,  subscription ID for Azure, and the project name GCP
+          example: my-allow-list
+          type: string
+        createdAt:
+          description: The timestamp of when the private connection was created
+          example: "2023-09-18T09:56:56Z"
+          type: string
+        deletedAt:
+          description: The timestamp of when the private connection was deleted
+          example: "2023-09-18T09:56:56Z"
+          type: string
+        outboundAllowList:
+          description: The account ID which must be allowed for outbound connections
+          example: arn:aws:iam:xxxxxxxxx:root
+          type: string
+        privateConnectionID:
+          description: The ID of the private connection
+          example: 8900372e-0000-1000-9000-4c47638040af
+          format: uuid
+          type: string
+        serviceName:
+          description: The name of the private connection service
+          example: My service
+          type: string
+        status:
+          description: The status of the private connection
+          enum:
+          - PENDING
+          - ACTIVE
+          - DELETED
+          example: ACTIVE
+          type: string
+        type:
+          description: The private connection type
+          enum:
+          - INBOUND
+          - OUTBOUND
+          example: INBOUND
+          type: string
+        updatedAt:
+          description: The timestamp of when the private connection was last updated
+          example: "2023-09-18T09:56:56Z"
+          type: string
+        workspaceGroupID:
+          description: The ID of the workspace group containing the private connection
+          example: 68af2f46-0000-1000-9000-3f6f5365d878
+          format: uuid
+          type: string
+        workspaceID:
+          description: The ID of the workspace to connect with
+          example: 7d6b3a5a-0000-1000-9000-d454af4c785b
+          format: uuid
+          type: string
+      required:
+      - privateConnectionID
+      - workspaceGroupID
+      type: object
+    PrivateConnectionCreate:
+      x-speakeasy-entity: PrivateConnection
+      description: Represents the information specified when creating a private connection
+      properties:
+        allowList:
+          description: The private connection allow list
+          example: my-allow-list
+          type: string
+        serviceName:
+          description: The name of the private connection service
+          example: My private link
+          type: string
+        type:
+          description: The private connection type
+          enum:
+          - INBOUND
+          - OUTBOUND
+          example: INBOUND
+          type: string
+        workspaceGroupID:
+          description: The ID of the workspace group containing the private connection
+          example: 68af2f46-0000-1000-9000-3f6f5365d878
+          format: uuid
+          type: string
+        workspaceID:
+          description: The ID of the workspace to connect with
+          format: uuid
+          type: string
+      required:
+      - workspaceGroupID
+      type: object
+    PrivateConnectionOutboundAllowLists:
+      type: array
+      items:
+        $ref: '#/components/schemas/PrivateConnectionOutboundAllowList'
+    PrivateConnectionOutboundAllowList:
+      x-speakeasy-entity: PrivateConnection
+      description: Represents information related to a private connection outbound
+        allow list
+      properties:
+        outboundAllowList:
+          description: The account ID allowed for outbound connections
+          example: arn:aws:iam:xxxxxxxxx:root
+          type: string
+      type: object
+    UpdatePrivateConnection:
+      x-speakeasy-entity: PrivateConnection
+      description: Represents the information specfied when updating a private connection
+      properties:
+        allowList:
+          description: The private connection allow list
+          example: my-allow-list
+          type: string
+      type: object
+    Regions:
+      type: array
+      items:
+         $ref: '#/components/schemas/Region'
+    Region:
+      x-speakeasy-entity: Region
+      description: Represents information related to a region in which a workspace
+        group is created
+      properties:
+        provider:
+          description: Name of the provider
+          enum:
+          - AWS
+          - GCP
+          - Azure
+          type: string
+        region:
+          description: Name of the region
+          type: string
+        regionID:
+          description: ID of the region
+          format: uuid
+          type: string
+      required:
+      - regionID
+      - region
+      - provider
+      type: object
+    ReplicatedDatabase:
+      x-speakeasy-entity: Region
+      description: Represents information related to a database's replication status
+      properties:
+        databaseName:
+          description: Name of the database
+          type: string
+        duplicationState:
+          description: Duplication state of the database
+          enum:
+          - Pending
+          - Active
+          - Inactive
+          - Error
+          type: string
+        region:
+          description: Name of the region
+          type: string
+      required:
+      - databaseName
+      - region
+      - duplicationState
+      type: object
+    StagesObjectMetadata:
+      x-speakeasy-entity: Stage
+      description: Represents the metadata corresponding to an object in Stages
+      properties:
+        content:
+          oneOf:
+          - example: Hello World!
+            type: string
+          - example: []
+            items:
+              $ref: '#/components/schemas/StagesObjectMetadata'
+            type: array
+        created:
+          example: "2023-09-08T17:35:43Z"
+          type: string
+        format:
+          description: Format of the response
+          enum:
+          - json
+          - null
+          nullable: true
+          type: string
+        last_modified:
+          example: "2023-09-08T17:35:43Z"
+          type: string
+        mimetype:
+          type: string
+        name:
+          description: Name of the Stages object
+          example: file.json
+          type: string
+        path:
+          description: Path of the Stages object
+          example: parent_folder/sample_folder/file.json
+          type: string
+        size:
+          example: 32
+          type: integer
+        type:
+          description: Object type
+          enum:
+          - ""
+          - json
+          - directory
+          - null
+          nullable: true
+          type: string
+        writable:
+          type: boolean
+      type: object
+    StagesPatch:
+      x-speakeasy-entity: Stage
+      description: Represents information specified when modifying an object in Stages
+      properties:
+        newPath:
+          description: New path of the object
+          example: parent_folder/new_sample_folder
+          type: string
+      type: object
+    StorageDRSetup:
+      x-speakeasy-entity: WorkspaceGroup
+      description: Represents the information specified to setup Storage DR
+      properties:
+        databaseNames:
+          description: List of database names
+          items:
+            example: x_db
+            type: string
+          type: array
+        regionID:
+          description: Region ID of the secondary region
+          format: uuid
+          type: string
+      required:
+      - regionID
+      - databaseNames
+      type: object
+    StorageDRStatus:
+      x-speakeasy-entity: WorkspaceGroup
+      description: Represents Storage DR status information
+      properties:
+        compute:
+          description: Represents information related to a workspace group's latest
+            storage DR operation
+          properties:
+            completedAttachments:
+              description: The number of database attachments that have been setup
+              type: integer
+            completedWorkspaces:
+              description: The number of workspaces that have been setup
+              type: integer
+            storageDRState:
+              description: Status of Storage DR operation
+              enum:
+              - Active
+              - Completed
+              - Failed
+              - Expired
+              - Canceled
+              type: string
+            storageDRType:
+              description: Name of Storage DR operation
+              enum:
+              - Failover
+              - Failback
+              - DRTestStart
+              - DRTestEnd
+              type: string
+            totalAttachments:
+              description: The total number of database attachments to setup
+              type: integer
+            totalWorkspaces:
+              description: The total number of workspaces to setup
+              type: integer
+          required:
+          - storageDRType
+          - storageDRState
+          - totalWorkspaceBuildTasks
+          - totalDatabaseAttachTasks
+          - completedWorkspaceBuildTasks
+          - completedDatabaseAttachTasks
+          type: object
+        storage:
+          items:
+            $ref: '#/components/schemas/ReplicatedDatabase'
+          type: array
+      required:
+      - compute
+      - storage
+      type: object
+    UpdateWindow:
+      x-speakeasy-entity: Workspace
+      description: Represents information related to an update window
+      properties:
+        day:
+          description: Day of week (0-6), starting on Sunday
+          example: 2
+          type: number
+        hour:
+          description: Hour of day - 0 to 23 (UTC)
+          example: 1
+          type: number
+      required:
+      - hour
+      - day
+      type: object
+    Workspaces:
+      type: array
+      items:
+        $ref: '#/components/schemas/Workspace'
+    Workspace:
+      description: Represents information related to a workspace
+      properties:
+        createdAt:
+          description: The timestamp of when the workspace was created
+          type: string
+        endpoint:
+          description: Endpoint to connect to the workspace
+          type: string
+        lastResumedAt:
+          description: (If included in the output) The timestamp of when the workspace
+            was last resumed
+          type: string
+        name:
+          description: Name of the workspace
+          type: string
+        resumeAttachments:
+          description: (If included in the output) The result of database attachments
+            after the workspace was resumed
+          items:
+            description: Represents information related to database attachments
+            properties:
+              attachment:
+                description: The type of attachment
+                enum:
+                - READWRITE
+                - READONLY
+                type: string
+              database:
+                description: Name of the database
+                type: string
+              error:
+                description: The error if the attachment was not successful
+                type: string
+              success:
+                description: Whether the attachment was successful or not
+                type: boolean
+            required:
+            - database
+            - attachment
+            - success
+            type: object
+          type: array
+        scalingProgress:
+          description: (If included in the output) The current progress percentage
+            for the scaling workspace
+          type: number
+        size:
+          description: |
+            Size of the workspace (in workspace size notation), such as "S-00" or "S-1"
+          type: string
+        state:
+          description: State of the workspace
+          enum:
+          - ACTIVE
+          - PENDING
+          - SUSPENDED
+          - FAILED
+          - TERMINATED
+          type: string
+        terminatedAt:
+          description: (If included in the output) The timestamp of when the workspace
+            was terminated
+          type: string
+        workspaceGroupID:
+          description: ID of the workspace group containing the workspace
+          format: uuid
+          type: string
+        workspaceID:
+          description: ID of the workspace
+          format: uuid
+          type: string
+      required:
+      - name
+      - workspaceID
+      - workspaceGroupID
+      - size
+      - state
+      - createdAt
+      type: object
+    WorkspaceCreate:
+      x-speakeasy-entity: Workspace
+      description: Represents the information specified while creating a workspace
+      properties:
+        enableKai:
+          description: Whether to create a SingleStore Kai-enabled workspace
+          type: boolean
+        name:
+          description: Name of the workspace
+          example: demo-workspace
+          type: string
+        size:
+          description: |
+            Size of the workspace (in workspace size notation), such as "S-1". The default value is "S-00".
+          example: S-2
+          type: string
+        workspaceGroupID:
+          description: ID of the workspace group in which the workspace is created
+          example: c74bb6a6-0000-1000-9000-1d874fa277b0
+          format: uuid
+          type: string
+      required:
+      - name
+      - workspaceGroupID
+      type: object
+    WorkspaceGroups:
+      type: array
+      items:
+        $ref: '#/components/schemas/WorkspaceGroup'
+    WorkspaceGroup:
+      x-speakeasy-entity: WorkspaceGroup
+      description: Represents information related to a workspace group
+      properties:
+        allowAllTraffic:
+          description: Whether or not all traffic is allowed to the workspace group
+          type: boolean
+        createdAt:
+          description: The timestamp of when the workspace was created
+          type: string
+        expiresAt:
+          description: The timestamp of when the workspace group will expire. At expiration,
+            the workspace group is terminated and all the data is lost.
+          type: string
+        firewallRanges:
+          description: The list of allowed inbound IP addresses. An empty list indicates
+            that no inbound requests are allowed.
+          items:
+            type: string
+          type: array
+        name:
+          description: Name of the workspace group
+          type: string
+        regionID:
+          description: ID of the region
+          format: uuid
+          type: string
+        state:
+          description: State of the workspace group
+          enum:
+          - ACTIVE
+          - PENDING
+          - FAILED
+          - TERMINATED
+          type: string
+        terminatedAt:
+          description: (If included in the output) The timestamp of when the workspace
+            group was terminated
+          type: string
+        updateWindow:
+          $ref: '#/components/schemas/UpdateWindow'
+        workspaceGroupID:
+          description: ID of the workspace group
+          format: uuid
+          type: string
+      required:
+      - name
+      - state
+      - workspaceGroupID
+      - createdAt
+      - regionID
+      type: object
+    WorkspaceGroupCreate:
+      x-speakeasy-entity: WorkspaceGroup
+      description: Represents the information specified while creating a workspace
+        group
+      properties:
+        adminPassword:
+          description: |
+            The admin password for the workspace group. The password must contain:
+
+              * At least 8 characters
+              * At least one uppercase character
+              * At least one lowercase character
+              * At least one number or special character
+
+            If a password is not specified while creating a workspace group, a password is generated and returned in the response object.
+          example: ""
+          type: string
+        allowAllTraffic:
+          description: If enabled, allows all traffic to the workspace group.
+          type: boolean
+        expiresAt:
+          description: |
+            The timestamp of when the workspace group will expire. If the expiration time is not specified, the workspace group will have no expiration time. At expiration, the workspace group is terminated and all the data is lost. Expiration time can be specified as a timestamp or duration. For example,
+
+              * "2023-09-02T15:04:05Z07:00"
+              * "2023-09-02T15:04:05-0700"
+              * "2023-09-02T15:04:05"
+              * "2023-09-02"
+              * "3h30m"
+          example: ""
+          type: string
+        firewallRanges:
+          description: |
+            A list of allowed CIDR ranges. An empty list indicates that no inbound requests are allowed.
+          example:
+          - 192.168.0.1/32
+          - 192.168.0.81/12
+          items:
+            type: string
+          type: array
+        name:
+          description: Name of the workspace group
+          example: demo-workspace-group
+          type: string
+        regionID:
+          description: ID of the region where the new workspace group is created
+          example: 7e7ffd27-0000-1000-9000-e72828a81ac7
+          format: uuid
+          type: string
+        updateWindow:
+          $ref: '#/components/schemas/UpdateWindow'
+      required:
+      - name
+      - regionID
+      - firewallRanges
+      type: object
+    WorkspaceGroupUpdate:
+      x-speakeasy-entity: WorkspaceGroup
+      description: Represents the information specified while updating a workspace
+        group
+      properties:
+        adminPassword:
+          description: |
+            The admin password for the workspace group. The password must contain:
+
+              * At least 8 characters
+              * At least one uppercase character
+              * At least one lowercase character
+              * At least one number or special character
+          example: ""
+          type: string
+        allowAllTraffic:
+          description: Whether to allow all traffic to the workspace group
+          type: boolean
+        expiresAt:
+          description: |
+            The timestamp of when the workspace group will expire. If the expiration time is not specified, the workspace group will have no expiration time. At expiration, the workspace group is terminated and all the data is lost. Expiration time can be specified as a timestamp or duration. For example,
+
+              * "2023-09-02T15:04:05Z07:00"
+              * "2023-09-02T15:04:05-0700"
+              * "2023-09-02T15:04:05"
+              * "2023-09-02"
+              * "3h30m"
+          example: ""
+          type: string
+        firewallRanges:
+          description: A list of allowed CIDR ranges. An empty list indicates that
+            no inbound requests are allowed.
+          example:
+          - 192.168.0.1/32
+          - 192.168.0.81/12
+          items:
+            type: string
+          type: array
+        name:
+          description: Name of the workspace group
+          example: new-workspace-group-name
+          type: string
+        updateWindow:
+          $ref: '#/components/schemas/UpdateWindow'
+      type: object
+  securitySchemes:
+    ApiKeyAuth:
+      bearerFormat: API key
+      description: |
+        For information on authenticating your API requests, refer to [`Management` API Overview](https://docs.singlestore.com/managed-service/en/reference/management-api.html).
+      scheme: bearer
+      type: http
+paths:
+  /v1/billing/usage:
+    description: The `usage` endpoint under billing can report compute and storage
+      usage.
+    get:
+      description: |
+        Lists the compute and storage usage of an organization in a given timeframe and aggregate type. The usage entries also contains details such as name, type and usage value.
+      parameters:
+      - description: Metrics include ComputeCredit, StorageAvgByte. default is all
+        in: query
+        name: metric
+        schema:
+          enum:
+          - ComputeCredit
+          - StorageAvgByte
+          type: string
+      - description: The start time for the usage interval in valid UTC ISO8601 format
+          e.g. 2023-07-30T18:30:00Z
+        in: query
+        name: startTime
+        required: true
+        schema:
+          type: string
+      - description: The end time for the usage interval valid UTC ISO8601 format
+          e.g. 2023-07-30T18:30:00Z
+        in: query
+        name: endTime
+        required: true
+        schema:
+          type: string
+      - description: The aggregate type used to group usage which includes hour, day
+          and month. default is hour
+        in: query
+        name: aggregateBy
+        schema:
+          enum:
+          - hour
+          - day
+          - month
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingUsage'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Lists the compute and storage usage of a organization
+      operationId: listBillingUsage
+      x-speakeasy-name-override: list
+      x-speakeasy-entity-operation: Billing#create
+      x-speakeasy-group: Billing
+      tags:
+      - Billing [Beta]
+  /v1/organizations/current:
+    get:
+      description: Returns information about the current authorized user's organization.
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Gets information about the current organization
+      operationId: readOrganizationInfo
+      x-speakeasy-name-override: read
+      x-speakeasy-group: Organizations
+      tags:
+      - Organizations
+  /v1/privateConnections:
+    description: The `privateConnections` endpoint can be used to create and manage
+      private connections to SingleStoreDB Cloud workspaces.
+    post:
+      description: |
+        Creates a new private connection. Upon successful completion of the request, a private connection is scheduled for creation. To query the private connection status, use the endpoints for the workspace group and workspace (if provided).
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrivateConnectionCreate'
+        description: Here's a sample of JSON data sent in the request body to the
+          API.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                privateConnectionID: b07fff9f-0000-1000-9000-b1974e06b736
+              schema:
+                $ref: '#/components/schemas/CreatePrivateConnectionResponse'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Creates a new private connection
+      operationId: createPrivateConnection
+      x-speakeasy-name-override: create
+      x-speakeasy-group: PrivateConnection
+      tags:
+      - Private Connections
+  /v1/privateConnections/{connectionID}:
+    delete:
+      description: Deletes a private connection for the specified connection ID. Upon
+        successful completion, a private connection is scheduled for deletion.
+      parameters:
+      - $ref: '#/components/parameters/connectionID'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                privateConnectionID: b07fff9f-0000-1000-9000-b1974e06b736
+              schema:
+                $ref: '#/components/schemas/DeletePrivateConnection'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: A private connection with the specified ID was not found
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Deletes a private connection
+      operationId: deletePrivateConnection
+      x-speakeasy-name-override: delete
+      x-speakeasy-group: PrivateConnection
+      tags:
+      - Private Connections
+    get:
+      description: Returns private connection information for the specified connection
+        ID, in JSON format. You must specify the connection ID in the API call.
+      parameters:
+      - $ref: '#/components/parameters/connectionID'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateConnections'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: A private connection with the specified ID was not found
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Gets information about a private connection
+      operationId: readPrivateConnection
+      x-speakeasy-name-override: read
+      x-speakeasy-group: PrivateConnection
+      tags:
+      - Private Connections
+    patch:
+      description: Updates a private connection. You must specify the connection ID
+        in the API call.
+      parameters:
+      - $ref: '#/components/parameters/connectionID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePrivateConnection'
+        description: Here's a sample of JSON data sent in the request body to the
+          API.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                privateConnectionID: b07fff9f-0000-1000-9000-b1974e06b736
+              schema:
+                $ref: '#/components/schemas/UpdatePrivateConnectionResponse'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: A private connection with the specified ID was not found
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Updates a private connection
+      operationId: updatePrivateConnection
+      x-speakeasy-name-override: update
+      x-speakeasy-group: PrivateConnection
+      tags:
+      - Private Connections
+  /v1/regions:
+    get:
+      description: Returns a list of valid regions for the user that support workspaces,
+        including the region ID and provider for each region.
+      parameters:
+      - $ref: '#/components/parameters/fields'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+              - provider: GCP
+                region: US West 1 (Oregon)
+                regionID: 1c1de314-0000-1000-9000-5047ff90842e
+              - provider: AWS
+                region: Europe Central 1 (Frankfurt)
+                regionID: 7e7ffd27-0000-1000-9000-e72828a81ac7
+              - provider: AWS
+                region: Asia Pacific Southeast 2 (Sydney)
+                regionID: c74bb6a6-0000-1000-9000-1d874fa277b7
+              schema:
+                  $ref: '#/components/schemas/Regions'
+          description: OK
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Lists all of the regions for the user that support workspaces
+      operationId: listRegions
+      x-speakeasy-name-override: list
+      x-speakeasy-group: Regions
+      tags:
+      - Regions
+  /v1/stages/{workspaceGroupID}/fs/{path}:
+    delete:
+      description: |
+        Deletes the file or folder at the specified path in Stages.
+
+        This endpoint supports both URL-encoded and regular URL paths. Here are some examples of valid requests:
+        - /v1/stages/68af2f46-0000-1000-9000-3f6f5365d878/fs/parent_folder/sample_folder
+        - /v1/stages/68af2f46-0000-1000-9000-3f6f5365d878/fs/parent_folder%2Fsample_folder
+
+        You must specify the `workspaceGroupID` and the folder/file path in the API call.
+      parameters:
+      - description: ID of the Stages-enabled workspace group
+        example: 68af2f46-0000-1000-9000-3f6f5365d878
+        in: path
+        name: workspaceGroupID
+        required: true
+        schema:
+          format: uuid
+          type: string
+      - description: Path in Stages to a file or folder to delete
+        examples:
+          file:
+            value: parent_folder/sample_folder/file.json
+          folder:
+            value: parent_folder/sample_folder
+        in: path
+        name: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteStagesFile'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Deletes a file or folder
+      operationId: deleteStagesFile
+      x-speakeasy-name-override: delete
+      x-speakeasy-group: Stages
+      tags:
+      - Stages
+    get:
+      description: |
+        If the specified path is a folder, the API returns the list of files and folders inside this folder in Stages. If the specified path is a file, the API call is redirected to a download URL.
+
+        This endpoint supports both URL-encoded and regular URL paths. Here are some examples of valid requests:
+        - /v1/stages/68af2f46-0000-1000-9000-3f6f5365d878/fs/parent_folder/sample_path
+        - /v1/stages/68af2f46-0000-1000-9000-3f6f5365d878/fs/parent_folder%2Fsample_path
+
+        You must specify the `workspaceGroupID` and the folder/file path in the API call.
+      parameters:
+      - description: ID of the Stages-enabled workspace group
+        example: 68af2f46-0000-1000-9000-3f6f5365d878
+        in: path
+        name: workspaceGroupID
+        required: true
+        schema:
+          format: uuid
+          type: string
+      - description: Path in Stages to a file or folder
+        examples:
+          file:
+            value: parent_folder/sample_folder/filename.json
+          folder:
+            value: parent_folder/sample_folder
+        in: path
+        name: path
+        required: true
+        schema:
+          type: string
+      - description: If enabled, the API request returns only metadata
+        in: query
+        name: metadata
+        schema:
+          type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StagesObjectMetadata'
+          description: OK
+        "307":
+          description: Temporary Redirect
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Gets information about a folder or downloads a file
+      operationId: readStagesFile
+      x-speakeasy-name-override: read
+      x-speakeasy-group: Stages
+      tags:
+      - Stages
+    patch:
+      description: |
+        Modifies the path of the existing file or folder in Stages to the new path specified in the request body.
+
+        This endpoint supports both URL-encoded and regular URL paths, so both of the following examples are valid requests:
+        - /v1/stages/68af2f46-0000-1000-9000-3f6f5365d878/fs/parent_folder/sample_folder
+        - /v1/stages/68af2f46-0000-1000-9000-3f6f5365d878/fs/parent_folder%2Fsample_folder
+
+        You must specify the `workspaceGroupID` and the folder/file path in the API call.
+      parameters:
+      - description: ID of the Stages-enabled workspace group
+        example: 68af2f46-0000-1000-9000-3f6f5365d878
+        in: path
+        name: workspaceGroupID
+        required: true
+        schema:
+          format: uuid
+          type: string
+      - description: Path in Stages to modify
+        examples:
+          file:
+            value: parent_folder/sample_folder/file.json
+          folder:
+            value: parent_folder/sample_folder
+        in: path
+        name: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StagesPatch'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModifyStagesFile'
+          description: OK
+        "307":
+          description: Temporary Redirect
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Modifies a file or folder in Stages
+      operationId: updateStagesFile
+      x-speakeasy-name-override: update
+      x-speakeasy-group: Stages
+      tags:
+      - Stages
+    put:
+      description: |
+        Creates a new folder or uploads a new file at the specified path in Stages as follows:
+         - If the request body contains a file, the file is uploaded at the specified path in Stages.
+         - If the request body does not contain a file and the `isFile` parameter is disabled, a folder is created at the specified path.
+         - If the request body does not contain a file to upload and the `isFile` parameter is enabled, an empty file is created at the specified path.
+
+        This endpoint supports both URL-encoded and regular URL paths. Here are some examples of valid requests:
+        - /v1/stages/68af2f46-0000-1000-9000-3f6f5365d878/fs/parent_folder/sample_path
+        - /v1/stages/68af2f46-0000-1000-9000-3f6f5365d878/fs/parent_folder%2Fsample_path
+
+        You must specify the `workspaceGroupID` and the folder/file path in the API call.
+      parameters:
+      - description: ID of the Stages-enabled workspace group
+        example: 68af2f46-0000-1000-9000-3f6f5365d878
+        in: path
+        name: workspaceGroupID
+        required: true
+        schema:
+          format: uuid
+          type: string
+      - description: Path in Stages
+        examples:
+          file:
+            value: parent_folder/sample_folder/file.json
+          folder:
+            value: parent_folder/sample_folder
+        in: path
+        name: path
+        required: true
+        schema:
+          type: string
+      - description: If set to `true`, forces creation of an empty file
+        in: query
+        name: isFile
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateStagesFileRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateStagesFile'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Creates a new folder or uploads a file
+      operationId: createStagesFile
+      x-speakeasy-name-override: create
+      x-speakeasy-group: Stages
+      tags:
+      - Stages
+  /v1/workspaceGroups:
+    description: The `workspaceGroups` endpoint can be used to manage workspaces.
+    get:
+      description: |
+        Returns a list of all of the workspace groups accessible to the user. Use the `includeTerminated` parameter to get a list of terminated workspace groups.
+      parameters:
+      - description: To include any terminated workspace groups, set to `true`
+        in: query
+        name: includeTerminated
+        schema:
+          type: boolean
+      - $ref: '#/components/parameters/fields'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+              - createdAt: "2023-09-18T09:56:56Z"
+                name: demo-workspace-group
+                regionID: 7d6b3a5a-0000-1000-9000-d454af4c785c
+                state: ACTIVE
+                workspaceGroupID: 7d6b3a5a-0000-1000-9000-d454af4c785b
+              schema:
+                  $ref: '#/components/schemas/WorkspaceGroups'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Lists the workspace groups the user can access
+      operationId: listWorkspaceGroup
+      x-speakeasy-name-override: list
+      x-speakeasy-group: WorkspaceGroups
+      tags:
+      - Workspace Groups
+    post:
+      description: |
+        Creates a new workspace group for the current user. You must specify the name, region ID, and firewall ranges for the workspace group in the API request body.
+
+        You may use the admin user password to connect with any workspace of the group. The admin user password can be specified in the request body. If the admin user password is not specified in the API request, a password is generated and returned in the response object.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceGroupCreate'
+        description: Here's a sample of JSON data sent in the request body to the
+          API.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                workspaceGroupID: 7d6b3a5a-0000-1000-9000-d454af4c785b
+              schema:
+                $ref: '#/components/schemas/CreateWorkspaceGroup'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Creates a new workspace group
+      operationId: createWorkspaceGroup
+      x-speakeasy-name-override: create
+      x-speakeasy-group: WorkspaceGroups
+      tags:
+      - Workspace Groups
+  /v1/workspaceGroups/{workspaceGroupID}:
+    delete:
+      description: |
+        Terminates a workspace group with the specified workspace group ID. You must specify the workspace group ID in the API call.
+
+        By default, you may only terminate empty workspace groups (a workspace group without workspaces). To terminate a workspace group with active workspaces, use the `force` parameter.
+      parameters:
+      - $ref: '#/components/parameters/workspaceGroupID'
+      - description: To terminate a workspace group even if it has active workspaces,
+          set to `true`
+        in: query
+        name: force
+        schema:
+          type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                workspaceGroupID: 7d6b3a5a-0000-1000-9000-d454af4c785b
+              schema:
+                  $ref: '#/components/schemas/TerminateWorkspaceGroups'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: A workspace group with the specified ID was not found
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Terminates a workspace group
+      operationId: deleteWorkspaceGroups
+      x-speakeasy-name-override: delete
+      x-speakeasy-group: WorkspaceGroups
+      tags:
+      - Workspace Groups
+    get:
+      description: |
+        Returns information for the specified
+        workspace group ID, in JSON format. You must specify the workspace group ID in the API call.
+      parameters:
+      - $ref: '#/components/parameters/workspaceGroupID'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                createdAt: "2023-09-18T09:56:56Z"
+                name: demo-workspace-group
+                regionID: 7d6b3a5a-0000-1000-9000-d454af4c785c
+                state: ACTIVE
+                workspaceGroupID: 7d6b3a5a-0000-1000-9000-d454af4c785b
+              schema:
+                $ref: '#/components/schemas/WorkspaceGroup'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: A workspace group with the specified ID was not found
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Gets information about a workspace group
+      operationId: readWorkspaceGroups
+      x-speakeasy-name-override: read
+      x-speakeasy-group: WorkspaceGroups
+      tags:
+      - Workspace Groups
+    patch:
+      description: |
+        Updates workspace group information for the specified workspace group, including the name, admin password, and firewall ranges. Specify the workspace group's new parameters in the request body. You must specify the workspace group ID in the API call.
+      parameters:
+      - $ref: '#/components/parameters/workspaceGroupID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceGroupUpdate'
+        description: Here's a sample of JSON data sent to the API in the request body.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                workspaceGroupID: 7d6b3a5a-0000-1000-9000-d454af4c785b
+              schema:
+                  $ref: '#/components/schemas/UpdateWorkspaceGroups'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: A workspace group with the specified ID was not found
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Updates a workspace group
+      operationId: updateWorkspaceGroups
+      x-speakeasy-name-override: update
+      x-speakeasy-group: WorkspaceGroups
+      tags:
+      - Workspace Groups
+  /v1/workspaceGroups/{workspaceGroupID}/privateConnections:
+    get:
+      description: |
+        Returns private connection information for the specified
+        workspace group ID, in JSON format. You must specify the workspace group ID in the API call.
+      parameters:
+      - $ref: '#/components/parameters/workspaceGroupID'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/PrivateConnections'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: A workspace group with the specified ID was not found
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Gets private connection information for a workspace group
+      operationId: readPrivateConnectionWorkspaceGroups
+      x-speakeasy-name-override: read_private_connection
+      x-speakeasy-group: WorkspaceGroups
+      tags:
+      - Workspace Groups
+  /v1/workspaceGroups/{workspaceGroupID}/storage/DR/failback:
+    patch:
+      description: You must specify the workspace group ID of the group in the standby
+        (secondary) region from which you are triggering the failback.
+      parameters:
+      - $ref: '#/components/parameters/workspaceGroupID'
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Starts failback to the primary region
+      operationId: updateFailbackWorkspaceGroups
+      x-speakeasy-name-override: update_failback
+      x-speakeasy-group: WorkspaceGroups
+      tags:
+      - Workspace Groups
+  /v1/workspaceGroups/{workspaceGroupID}/storage/DR/failover:
+    patch:
+      description: You must specify the workspace group ID of the group in the inactive
+        (primary) region from which you are triggering the failover.
+      parameters:
+      - $ref: '#/components/parameters/workspaceGroupID'
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Starts failover to the secondary region
+      operationId: updateFailoverWorkspaceGroups
+      x-speakeasy-name-override: update_failover
+      x-speakeasy-group: WorkspaceGroups
+      tags:
+      - Workspace Groups
+  /v1/workspaceGroups/{workspaceGroupID}/storage/DR/regions:
+    get:
+      description: Returns a list of regions with regions IDs in JSON format. You
+        must specify the workspace group ID of the group you are setting up for disaster
+        recovery.
+      parameters:
+      - $ref: '#/components/parameters/workspaceGroupID'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/Regions'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Gets information about which regions you can setup as a disaster recovery
+        backup
+      operationId: readRecoveryBackupWorkspaceGroups
+      x-speakeasy-name-override: read_recovery_backup
+      x-speakeasy-group: WorkspaceGroups
+      tags:
+      - Workspace Groups
+  /v1/workspaceGroups/{workspaceGroupID}/storage/DR/setup:
+    post:
+      description: You must specify the workspace group ID of the group you are setting
+        up for disaster recovery and the region ID of your secondary region.
+      parameters:
+      - $ref: '#/components/parameters/workspaceGroupID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageDRSetup'
+        description: Here's a sample of JSON data sent in the request body to the
+          API.
+        required: true
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Sets up Storage DR for the workspace group. Backup region and selected
+        databases to be replicated are provided as part of the request.
+      operationId: createStorageWorkspaceGroups
+      x-speakeasy-name-override: create_storage
+      x-speakeasy-group: WorkspaceGroups
+      tags:
+      - Workspace Groups
+  /v1/workspaceGroups/{workspaceGroupID}/storage/DR/startFailoverTest:
+    patch:
+      description: You must specify the workspace group ID for the group in the active
+        (primary) region that you will failover from. This will give you an opportunity
+        to setup any configuration on your workspace group in the secondary region.
+      parameters:
+      - $ref: '#/components/parameters/workspaceGroupID'
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Starts Failover test mode
+      operationId: updateStartFailoverTestModeWorkspaceGroups
+      x-speakeasy-name-override: update_start_failover_test_mode
+      x-speakeasy-group: WorkspaceGroups
+      tags:
+      - Workspace Groups
+  /v1/workspaceGroups/{workspaceGroupID}/storage/DR/status:
+    get:
+      description: Returns the replication status of each database and the status
+        of the latest Storage DR operation (Failover, Failback, etc.). You must specify
+        the workspace group ID of the group that you are requesting status information
+        for.
+      parameters:
+      - $ref: '#/components/parameters/workspaceGroupID'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageDRStatus'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Gets information about the storage DR status of the workspace group
+      operationId: readStorageStatusWorkspaceGroups
+      x-speakeasy-name-override: read_storage_status
+      x-speakeasy-group: WorkspaceGroups
+      tags:
+      - Workspace Groups
+  /v1/workspaceGroups/{workspaceGroupID}/storage/DR/stopFailoverTest:
+    patch:
+      description: You must specify the workspace group ID for the group in the active
+        (primary) region that you will failover from. This will end the Failover test
+        making the workspace group in the secondary region along with its configuration
+        no longer accessible.
+      parameters:
+      - $ref: '#/components/parameters/workspaceGroupID'
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Stops Failover test mode
+      operationId: updateStopFailoverTestModeWorkspaceGroups
+      x-speakeasy-name-override: update_stop_failover_test_mode
+      x-speakeasy-group: WorkspaceGroups
+      tags:
+      - Workspace Groups
+  /v1/workspaces:
+    description: The `workspaces` endpoint can be used to manage workspaces.
+    get:
+      description: |
+        Returns a list of all of the workspaces accessible to the user in the specified workspace group. You must specify the workspace group ID in the API call to list the workspaces in the group. Use the `includeTerminated` parameter to list the terminated workspaces.
+      parameters:
+      - description: ID of the workspace group
+        in: query
+        name: workspaceGroupID
+        required: true
+        schema:
+          format: uuid
+          type: string
+      - description: To include any terminated workspaces, set to `true`
+        in: query
+        name: includeTerminated
+        schema:
+          type: boolean
+      - $ref: '#/components/parameters/fields'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+              - createdAt: "2023-09-18T09:56:56Z"
+                endpoint: 192.168.224.3:30342
+                name: demo-workspace
+                size: S-00
+                state: ACTIVE
+                workspaceGroupID: 7d6b3a5a-0000-1000-9000-d454af4c785b
+                workspaceID: 7d6b3a5a-0000-1000-9000-d454af4c785b
+              schema:
+                  $ref: '#/components/schemas/Workspaces'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: A workspace group with the specified ID was not found
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Lists the workspaces the user can access
+      operationId: listWorkspace
+      x-speakeasy-name-override: list
+      x-speakeasy-group: Workspaces
+      tags:
+      - Workspaces
+    post:
+      description: |-
+        Creates a new workspace for the current user in the specified workspace group. You must specify the name of the workspace and the workspace group ID in the request body. Once a workspace is created, you can neither change its name nor its workspace group. See [Workspaces](https://docs.singlestore.com/managed-service/en/reference/management-api.html#workspaces-729524) for more information.
+        This API call does not take any request parameters.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceCreate'
+        description: Here's a sample of JSON data sent in the request body to the
+          API.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                workspaceID: 7d6b3a5a-0000-1000-9000-d454af4c785b
+              schema:   
+                $ref: '#/components/schemas/CreateWorkspace'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Creates a new workspace
+      operationId: createWorkspace
+      x-speakeasy-name-override: create
+      x-speakeasy-group: Workspaces
+      tags:
+      - Workspaces
+  /v1/workspaces/{workspaceID}:
+    delete:
+      description: |
+        Terminates a workspace with the specified workspace ID. You must specify the workspace ID in the API call.
+
+        All the databases attached to the workspace are detached when the workspace is terminated.
+      parameters:
+      - $ref: '#/components/parameters/workspaceID'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                workspaceID: 7d6b3a5a-0000-1000-9000-d454af4c785b
+              schema:
+                $ref: '#/components/schemas/CreateWorkspace'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: A workspace with the specified ID was not found
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Terminates a workspace
+      operationId: deleteWorkspace
+      x-speakeasy-name-override: delete
+      x-speakeasy-group: Workspaces
+      tags:
+      - Workspaces
+    get:
+      description: Returns workspace information for the specified workspace ID, in
+        JSON format. You must specify the workspace ID in the API call.
+      parameters:
+      - $ref: '#/components/parameters/workspaceID'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                createdAt: "2023-09-18T09:56:56Z"
+                endpoint: 192.168.224.3:30342
+                name: demo-workspace
+                size: S-00
+                state: ACTIVE
+                workspaceGroupID: 7d6a4a5a-0000-1000-9000-d454af4c785b
+                workspaceID: 7d6b3a5a-0000-1000-9000-d454af4c785b
+              schema:
+                $ref: '#/components/schemas/Workspace'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: A workspace with the specified ID was not found
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Gets information about a workspace
+      operationId: readWorkspace
+      x-speakeasy-name-override: read
+      x-speakeasy-group: Workspaces
+      tags:
+      - Workspaces
+    patch:
+      description: |
+        Updates workspace information for the specified workspace, including the size. Specify the workspace's new parameters in the request body. You must specify the workspace ID in the API call.
+      parameters:
+      - $ref: '#/components/parameters/workspaceID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Workspace'
+        description: Here's a sample of JSON data sent to the API in the request body.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                workspaceID: 7d6b3a5a-0000-1000-9000-d454af4c785b
+              schema:
+                $ref: '#/components/schemas/CreateWorkspace'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: A workspace with the specified ID was not found
+        "409":
+          description: Request conflict
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Updates information about a workspace
+      operationId: updateWorkspace
+      x-speakeasy-name-override: update
+      x-speakeasy-group: Workspaces
+      tags:
+      - Workspaces
+  /v1/workspaces/{workspaceID}/privateConnections:
+    get:
+      description: Returns private connection information for the specified workspace
+        ID, in JSON format. You must specify the workspace ID in the API call.
+      parameters:
+      - $ref: '#/components/parameters/workspaceID'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/PrivateConnections'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: A workspace with the specified ID was not found
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Gets private connection information for a workspace
+      operationId: readPrivateConnectionWorkspace
+      x-speakeasy-name-override: read_private_connection
+      x-speakeasy-group: Workspaces
+      tags:
+      - Workspaces
+  /v1/workspaces/{workspaceID}/privateConnections/outboundAllowList:
+    get:
+      description: Returns the account ID which must be allowed for outbound connections.
+      parameters:
+      - $ref: '#/components/parameters/workspaceID'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/PrivateConnectionOutboundAllowLists'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: A workspace with the specified ID was not found
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Gets the outbound allow list for a workspace
+      operationId: getOutboundWorkspace
+      x-speakeasy-name-override: get_outbound
+      x-speakeasy-group: Workspaces
+      tags:
+      - Workspaces
+  /v1/workspaces/{workspaceID}/resume:
+    post:
+      description: |
+        Resumes a workspace with the specified workspace ID. You must specify the workspace ID in the API call.
+      parameters:
+      - $ref: '#/components/parameters/workspaceID'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                workspaceID: 7d6b3a5a-0000-1000-9000-d454af4c785b
+              schema:
+                $ref: '#/components/schemas/CreateWorkspace'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: A workspace with the specified ID was not found
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Resumes a workspace
+      operationId: createResumeWorkspace
+      x-speakeasy-name-override: create_resume
+      x-speakeasy-group: Workspaces
+      tags:
+      - Workspaces
+  /v1/workspaces/{workspaceID}/storage/DR/failback:
+    patch:
+      description: You must specify the workspace ID of a workspace in the standby
+        (secondary) region from which you are triggering the failback.
+      parameters:
+      - $ref: '#/components/parameters/workspaceID'
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Starts failback to the primary region
+      operationId: updateFailbackWorkspace
+      x-speakeasy-name-override: update_failback
+      x-speakeasy-group: Workspaces
+      tags:
+      - Workspaces
+  /v1/workspaces/{workspaceID}/storage/DR/failover:
+    patch:
+      description: You must specify the workspace ID of a workspace in the group in
+        the inactive (primary) region from which you are triggering the failover.
+      parameters:
+      - $ref: '#/components/parameters/workspaceID'
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Starts failover to the secondary region
+      operationId: updateFailoverWorkspace
+      x-speakeasy-name-override: update_failover
+      x-speakeasy-group: Workspaces
+      tags:
+      - Workspaces
+  /v1/workspaces/{workspaceID}/storage/DR/regions:
+    get:
+      description: Returns a list of regions with regions IDs in JSON format. You
+        must specify the workspace ID of a workspace in the group you are setting
+        up for disaster recovery.
+      parameters:
+      - $ref: '#/components/parameters/workspaceID'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/Regions'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Gets information about which regions you can setup as a disaster recovery
+        backup
+      operationId: readRecoveryBackupWorkspace
+      x-speakeasy-name-override: read_recovery_backup
+      x-speakeasy-group: Workspaces
+      tags:
+      - Workspaces
+  /v1/workspaces/{workspaceID}/storage/DR/setup:
+    post:
+      description: You must specify the workspace ID of a workspace in the group you
+        are setting up for disaster recovery and the region ID of your secondary region.
+      parameters:
+      - $ref: '#/components/parameters/workspaceID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageDRSetup'
+        description: Here's a sample of JSON data sent in the request body to the
+          API.
+        required: true
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Sets up Storage DR for the workspace group of the provided workspace.
+        Backup region and selected databases to be replicated are provided as part
+        of the request.
+      operationId: createStorageWorkspace
+      x-speakeasy-name-override: create_storage
+      x-speakeasy-group: Workspaces
+      tags:
+      - Workspaces
+  /v1/workspaces/{workspaceID}/storage/DR/startFailoverTest:
+    patch:
+      description: You must specify the workspace ID of a workspace in the group in
+        the active (primary) region that you will failover from. This will give you
+        an opportunity to setup any configuration on your workspace group in the secondary
+        region.
+      parameters:
+      - $ref: '#/components/parameters/workspaceID'
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Starts Failover test mode
+      operationId: updateStartFailoverTestModeWorkspace
+      x-speakeasy-name-override: update_start_failover_test_mode
+      x-speakeasy-group: Workspaces
+      tags:
+      - Workspaces
+  /v1/workspaces/{workspaceID}/storage/DR/status:
+    get:
+      description: Returns the replication status of each database and the status
+        of the latest Storage DR operation (Failover, Failback, etc.). You must specify
+        the workspace ID of a workspace in the group for which you are requesting
+        the status information.
+      parameters:
+      - $ref: '#/components/parameters/workspaceID'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageDRStatus'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Gets information about the storage DR status of the group in which
+        the provided workspace belongs to
+      operationId: readStorageStatusWorkspace
+      x-speakeasy-name-override: read_storage_status
+      x-speakeasy-group: Workspaces
+      tags:
+      - Workspaces
+  /v1/workspaces/{workspaceID}/storage/DR/stopFailoverTest:
+    patch:
+      description: You must specify the workspace ID of a workspace in the group in
+        the active (primary) region that you will failover from. This will end the
+        Failover test making the workspace group in the secondary region along with
+        its configuration no longer accessible.
+      parameters:
+      - $ref: '#/components/parameters/workspaceID'
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Stops Failover test mode
+      operationId: updateStopFailoverTestModeWorkspace
+      x-speakeasy-name-override: update_stop_failover_test_mode
+      x-speakeasy-group: Workspaces
+      tags:
+      - Workspaces
+  /v1/workspaces/{workspaceID}/suspend:
+    post:
+      description: Suspends a workspace with the specified workspace ID. You must
+        specify the workspace ID in the API call.
+      parameters:
+      - $ref: '#/components/parameters/workspaceID'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                workspaceID: 7d6b3a5a-0000-1000-9000-d454af4c785b
+              schema:
+                $ref: '#/components/schemas/CreateWorkspace'
+          description: OK
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "404":
+          description: A workspace with the specified ID was not found
+        "429":
+          description: Too many requests
+        "500":
+          description: Internal server error
+      summary: Suspends a workspace
+      operationId: createSuspendWorkspace
+      x-speakeasy-name-override: create_suspend
+      x-speakeasy-group: Workspaces
+      tags:
+      - Workspaces
